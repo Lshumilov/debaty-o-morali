@@ -1,0 +1,1117 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow" data-publish>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Дебаты о морали</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&family=Unbounded:wght@500;700&display=swap">
+<style>
+/* Layout: one reading column with a sticky section bar; topics are a filterable list of fold-out cards, ЗА (blue) and ПРОТИВ (rust) side by side */
+:root{
+  --bg:#f2f4f8; --surface:#ffffff; --ink:#142033; --muted:#566277; --line:#d8dee8;
+  --pro:#1d64a8; --pro-soft:#e2edf8; --con:#b5400f; --con-soft:#fae8dd;
+  --chip:#e6ebf3; --mark:#fff0a8; --ok:#1d7a4a;
+  --f-display:"Unbounded","Golos Text",system-ui,sans-serif;
+  --f-body:"Golos Text",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0e141e; --surface:#161f2d; --ink:#e5eaf2; --muted:#9ba7b9; --line:#29354a;
+  --pro:#72b4ee; --pro-soft:#15304a; --con:#f0915f; --con-soft:#3a2319;
+  --chip:#202b3d; --mark:#4d4421; --ok:#5fcf93; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0e141e; --surface:#161f2d; --ink:#e5eaf2; --muted:#9ba7b9; --line:#29354a;
+  --pro:#72b4ee; --pro-soft:#15304a; --con:#f0915f; --con-soft:#3a2319;
+  --chip:#202b3d; --mark:#4d4421; --ok:#5fcf93; color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.55;margin:0;padding:0 16px}
+.wrap{max-width:860px;margin:0 auto;padding-block:28px 80px}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;line-height:1.2;margin:0}
+h1{font-size:clamp(28px,6vw,44px);font-weight:700;letter-spacing:-.01em}
+h2{font-size:clamp(21px,3.6vw,27px);font-weight:700;margin-bottom:14px}
+h3{font-size:16px;font-weight:500;margin-bottom:8px}
+p{margin:0 0 12px}
+.eyebrow{font-family:var(--f-mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.muted{color:var(--muted)}
+a{color:var(--pro)}
+:focus-visible{outline:2px solid var(--pro);outline-offset:2px;border-radius:4px}
+
+/* header */
+.hero{display:grid;gap:14px;padding-block:8px 22px}
+.podium{display:flex;height:10px;border-radius:5px;overflow:hidden;max-width:320px}
+.podium span:first-child{flex:1;background:var(--pro)}
+.podium span:last-child{flex:1;background:var(--con)}
+.lead{font-size:18px;max-width:62ch}
+.facts{display:flex;flex-wrap:wrap;gap:8px}
+.fact{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:6px 10px;font-size:14px}
+.fact b{font-family:var(--f-mono);font-weight:700}
+
+/* nav */
+nav.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:1px solid var(--line);margin:0 -16px;padding:8px 16px;overflow-x:auto;white-space:nowrap}
+nav.bar a{display:inline-block;text-decoration:none;color:var(--ink);font-size:14px;font-weight:500;padding:6px 11px;border-radius:999px;background:var(--chip);margin-right:6px}
+nav.bar a:hover{background:var(--pro-soft);color:var(--pro)}
+
+section{padding-top:40px;scroll-margin-top:56px}
+.sec-intro{max-width:64ch}
+
+/* generic blocks */
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
+.grid2>*{min-width:0}
+.stack{display:grid;gap:14px}
+ol.steps,ul.list{margin:0;padding-left:20px;display:grid;gap:6px}
+.note{border-left:3px solid var(--con);background:var(--con-soft);padding:12px 14px;border-radius:0 10px 10px 0}
+.note.blue{border-left-color:var(--pro);background:var(--pro-soft)}
+.note p:last-child{margin:0}
+
+/* speech template */
+.speech{font-size:16.5px;line-height:1.75}
+.speech p{margin-bottom:10px}
+.blank{background:var(--mark);padding:1px 5px;border-radius:4px;font-style:italic}
+.step-tag{font-family:var(--f-mono);font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:2px}
+.formula{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:6px 0 4px}
+.formula div{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px}
+.formula b{display:block;font-family:var(--f-display);font-weight:500;font-size:15px;margin-bottom:4px}
+.formula span{font-size:14px;color:var(--muted)}
+.formula i{font-style:normal;color:var(--ink)}
+
+/* phrases */
+.phr h3{color:var(--pro)}
+.phr ul{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.phr li{font-size:15px;padding-left:14px;position:relative}
+.phr li::before{content:"";position:absolute;left:0;top:.7em;width:6px;height:2px;background:var(--muted)}
+
+/* lines */
+.lines{display:grid;gap:12px}
+.ln{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px}
+.ln header{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px 12px;margin-bottom:8px}
+.ln .nums{font-family:var(--f-mono);font-size:13px;color:var(--muted)}
+.sides{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px;margin-top:8px}
+.sides>div{min-width:0;border-radius:8px;padding:10px 12px;font-size:15px}
+.s-pro{background:var(--pro-soft)}
+.s-con{background:var(--con-soft)}
+.sl{font-family:var(--f-mono);font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;display:block;margin-bottom:3px}
+.s-pro .sl{color:var(--pro)} .s-con .sl{color:var(--con)}
+.sides .sl{font-size:12px;margin-bottom:8px}
+.lx-h{display:block;font-size:12.5px;font-weight:600;color:var(--muted);margin:2px 0 4px}
+ol.la{margin:0 0 10px;padding-left:18px;display:grid;gap:5px}
+ul.lx{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+ul.lx li{padding-left:12px;position:relative}
+ul.lx li::before{content:"";position:absolute;left:0;top:.7em;width:5px;height:5px;border-radius:50%;background:var(--muted)}
+
+/* topics */
+.tools{display:grid;gap:10px;margin-bottom:14px}
+.search{width:100%;font:inherit;font-size:16px;padding:11px 14px;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--ink)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font:inherit;font-size:13px;padding:5px 10px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.progress{display:flex;align-items:center;gap:10px;font-size:14px;color:var(--muted)}
+.pbar{flex:1;max-width:240px;height:6px;border-radius:3px;background:var(--chip);overflow:hidden}
+.pbar i{display:block;height:100%;background:var(--ok);width:0;transition:width .3s}
+.topics{display:grid;gap:8px}
+details.tp{background:var(--surface);border:1px solid var(--line);border-radius:12px}
+details.tp>summary{list-style:none;cursor:pointer;display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;padding:12px 14px}
+details.tp>summary::-webkit-details-marker{display:none}
+.tn{font-family:var(--f-mono);font-weight:700;font-size:14px;color:var(--muted);min-width:2ch;text-align:right}
+.tt{font-weight:600;font-size:16px;min-width:0}
+.tt small{display:block;font-weight:400;font-size:12.5px;color:var(--muted);margin-top:2px}
+.done-lbl{display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--muted);cursor:pointer;white-space:nowrap}
+.done-lbl input{width:18px;height:18px;accent-color:var(--ok)}
+details.tp.is-done .tn{color:var(--ok)}
+.tbody{padding:0 14px 16px;display:grid;gap:12px}
+.key{font-size:15px;background:var(--chip);border-radius:8px;padding:10px 12px}
+.key b{font-family:var(--f-mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:2px}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:10px}
+.col{min-width:0;border-radius:10px;padding:12px 14px}
+.col.pro{background:var(--pro-soft)} .col.con{background:var(--con-soft)}
+.col h4{margin:0 0 8px;font-family:var(--f-display);font-weight:500;font-size:14px;letter-spacing:.02em}
+.col.pro h4{color:var(--pro)} .col.con h4{color:var(--con)}
+.col ol{margin:0;padding-left:18px;display:grid;gap:8px;font-size:15px}
+.col ol b{font-weight:600}
+.q{margin-top:10px;font-size:14.5px;border-top:1px dashed var(--line);padding-top:8px}
+.q b{font-family:var(--f-mono);font-size:11px;letter-spacing:.05em;text-transform:uppercase;display:block;color:var(--muted)}
+.empty{padding:20px;text-align:center;color:var(--muted)}
+
+/* examples */
+.ex-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px}
+.ex{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 14px;min-width:0}
+.ex h3{font-family:var(--f-body);font-weight:700;font-size:15.5px;margin-bottom:4px}
+.ex p{font-size:14.5px;margin-bottom:6px}
+.ex .fit{font-family:var(--f-mono);font-size:12px;color:var(--muted)}
+.ex-head{font-family:var(--f-mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:18px 0 8px}
+
+/* trainer */
+.trainer{display:grid;gap:14px}
+.card-draw{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px;display:grid;gap:10px}
+.draw-side{display:inline-block;font-family:var(--f-display);font-weight:700;font-size:14px;padding:4px 10px;border-radius:6px;color:var(--surface)}
+.draw-side.pro{background:var(--pro)} .draw-side.con{background:var(--con)}
+.draw-title{font-family:var(--f-display);font-weight:500;font-size:clamp(19px,3.4vw,24px);line-height:1.3}
+.btns{display:flex;flex-wrap:wrap;gap:8px}
+.btn{font:inherit;font-size:15px;font-weight:600;padding:9px 14px;border-radius:9px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
+.btn.primary{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.btn:hover{border-color:var(--pro)}
+.timer{display:flex;flex-wrap:wrap;align-items:center;gap:16px}
+.clock{font-family:var(--f-mono);font-weight:700;font-size:56px;letter-spacing:.02em;font-variant-numeric:tabular-nums;line-height:1}
+.clock.warn{color:var(--con)}
+.clock.over{animation:blink 1s steps(2) infinite}
+@keyframes blink{50%{opacity:.25}}
+@media (prefers-reduced-motion: reduce){.clock.over{animation:none}}
+.hint{font-size:15px}
+
+/* plan */
+.plan{display:grid;gap:12px}
+.day{display:grid;grid-template-columns:110px 1fr;gap:14px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+.day>*{min-width:0}
+.day .d{font-family:var(--f-display);font-weight:500;font-size:15px}
+.day .d small{display:block;font-family:var(--f-body);font-size:13px;color:var(--muted);font-weight:400}
+@media (max-width:520px){.day{grid-template-columns:1fr;gap:6px}}
+.check{list-style:none;padding:0;margin:0;display:grid;gap:8px}
+.check li{display:flex;gap:10px;align-items:flex-start}
+.check input{width:18px;height:18px;margin-top:3px;accent-color:var(--ok);flex:none}
+footer{margin-top:48px;font-size:14px;color:var(--muted)}
+</style>
+
+</head>
+<body>
+<div class="wrap">
+
+<header class="hero">
+  <div class="eyebrow">Лига дебатов · 8–9 класс · муниципальный этап, 1–15 октября</div>
+  <h1>Дебаты о морали</h1>
+  <div class="podium" aria-hidden="true"><span></span><span></span></div>
+  <p class="lead">Красноречие на дебатах не главное. Побеждает тот, кто говорит понятно, по схеме и с примерами. Здесь собраны шаблоны речей, приёмы для вопросов и разбор всех 40 тем за обе стороны.</p>
+  <div class="facts">
+    <span class="fact">Команда — <b>3</b> человека</span>
+    <span class="fact">Общая тематика — <b>Мораль</b></span>
+    <span class="fact">Тем — <b>40</b> (10 только для 8–9 кл. + 30 общих)</span>
+    <span class="fact">Позиции раздают на месте и <b>меняют</b></span>
+  </div>
+</header>
+
+<nav class="bar" aria-label="Разделы">
+  <a href="#rules">Как играть</a><a href="#speech">Речь</a><a href="#qa">Вопросы</a><a href="#lines">9 линий</a><a href="#topics">40 тем</a><a href="#examples">Примеры</a><a href="#trainer">Тренажёр</a><a href="#plan">План</a>
+</nav>
+
+<!-- RULES -->
+<section id="rules">
+  <h2>Как устроена игра</h2>
+  <div class="stack">
+    <div class="note">
+      <p><b>Главное из регламента.</b> Тему и позицию (ЗА или ПРОТИВ) вы узнаете только на месте, а после раунда позиции поменяют. Поэтому каждую тему готовим <b>с двух сторон</b>. Плюс в том, что аргументы одной стороны сразу служат опровержением для другой.</p>
+    </div>
+    <div class="grid2">
+      <div class="panel">
+        <h3>Роли в команде из трёх</h3>
+        <p class="muted" style="font-size:14px">Это типичная схема. Если в вашем регламенте иначе, сохраните логику и поменяйте порядок.</p>
+        <ol class="steps">
+          <li><b>Спикер 1.</b> Определения, критерий, 2–3 аргумента. Задаёт рамку всей игры.</li>
+          <li><b>Спикер 2.</b> Опровергает соперников, укрепляет свои аргументы, может добавить один новый.</li>
+          <li><b>Спикер 3.</b> Новых аргументов нет. Сравнивает: «вот о чём спорили, вот почему мы убедительнее».</li>
+        </ol>
+      </div>
+      <div class="panel">
+        <h3>За что ставят баллы</h3>
+        <ul class="list">
+          <li>Логика: аргумент доказывает именно тему.</li>
+          <li>Примеры: литература, история, жизнь.</li>
+          <li>Опровержение: вы ответили на их доводы.</li>
+          <li>Вопросы и ответы: точно, коротко, без паники.</li>
+          <li>Командная работа и культура речи.</li>
+        </ul>
+        <p style="margin-top:10px;font-size:14px" class="muted">Красивая речь — только один пункт из пяти. Остальные четыре берутся подготовкой.</p>
+      </div>
+    </div>
+    <div class="panel">
+      <h3>Как работать командой</h3>
+      <div class="grid2">
+        <div><span class="step-tag">До раунда</span>Распределите, кто какой аргумент говорит. За 1 минуту договоритесь о <b>критерии</b> (см. ниже), чтобы вся команда тянула в одну сторону.</div>
+        <div><span class="step-tag">Во время</span>Один ведёт «флоу»: лист в две колонки, <i>их аргумент → наш ответ</i>. Другой следит за временем. Передавайте друг другу записки.</div>
+        <div><span class="step-tag">Между речами</span>Быстро обсудите 3 вопроса: в чём их главный довод? где у нас дыра? что обязательно скажет третий спикер?</div>
+      </div>
+    </div>
+    <div class="panel">
+      <h3>Если на подготовку дали 5 минут</h3>
+      <ol class="steps">
+        <li><b>1 мин.</b> Ключевое слово темы, его определение и критерий.</li>
+        <li><b>2 мин.</b> Каждый пишет по одному аргументу с примером (подсказки в разделе «40 тем»).</li>
+        <li><b>1 мин.</b> Угадайте 2 главных аргумента соперников и ответ на каждый.</li>
+        <li><b>1 мин.</b> Кто что говорит. Первый спикер повторяет вслух первую фразу своей речи.</li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<!-- SPEECH -->
+<section id="speech">
+  <h2>Речь по шаблону</h2>
+  <p class="sec-intro">Не надо придумывать речь с нуля. Выучи каркас и подставляй тему. Жёлтые места заполняешь сам. Говори медленно: пауза звучит уверенно, а скороговорка звучит как волнение.</p>
+
+  <div class="panel speech">
+    <p><span class="step-tag">Вступление · 15 сек</span>Уважаемые судьи, уважаемые соперники! Сегодня наша команда <span class="blank">утверждает / опровергает</span>, что «<span class="blank">тема</span>».</p>
+    <p><span class="step-tag">Определения · 20 сек</span>Чтобы спорить об одном и том же, договоримся о словах. Под «<span class="blank">ключевое слово</span>» мы понимаем <span class="blank">простое определение</span>.</p>
+    <p><span class="step-tag">Критерий · 15 сек</span>Как понять, кто прав? Мы предлагаем смотреть на то, <span class="blank">что лучше для людей в долгую / что сохраняет доверие / что делает человека человечнее</span>.</p>
+    <p><span class="step-tag">Анонс · 10 сек</span>У нас три аргумента. Первый — <span class="blank">3–5 слов</span>. Второй — <span class="blank">…</span>. Третий — <span class="blank">…</span>.</p>
+    <p><span class="step-tag">Аргументы · по 30–40 сек</span>Первый аргумент. <span class="blank">Тезис</span>. Почему? Потому что <span class="blank">объяснение</span>. Например, <span class="blank">пример</span>. Значит, <span class="blank">связь с темой</span>.</p>
+    <p><span class="step-tag">Финал · 10 сек</span>Итак, «<span class="blank">тема</span>», потому что <span class="blank">1</span>, <span class="blank">2</span> и <span class="blank">3</span>. Спасибо!</p>
+  </div>
+
+  <h3 style="margin-top:22px">Формула одного аргумента</h3>
+  <div class="formula">
+    <div><b>Тезис</b><span>Одно короткое утверждение. <i>«Ложь разрушает доверие».</i></span></div>
+    <div><b>Почему</b><span>«Потому что…» — логика в одном-двух предложениях.</span></div>
+    <div><b>Например</b><span>Книга, история, случай из жизни.</span></div>
+    <div><b>Значит</b><span>Вернись к теме: «Значит, …»</span></div>
+  </div>
+  <p class="muted" style="font-size:14px">Если в аргументе нет «Например» и «Значит», судья его почти не засчитает. Это самая частая ошибка новичков.</p>
+
+  <div class="grid2" style="margin-top:18px">
+    <div class="panel">
+      <h3>Опровержение в 4 шага</h3>
+      <ol class="steps">
+        <li><b>Повтори:</b> «Соперники сказали, что…»</li>
+        <li><b>Атакуй:</b> «Это не так / это верно не всегда, потому что…»</li>
+        <li><b>Докажи:</b> «Например…»</li>
+        <li><b>Добей:</b> «Значит, их аргумент не доказывает тему».</li>
+      </ol>
+    </div>
+    <div class="panel">
+      <h3>Куда бить</h3>
+      <ul class="list">
+        <li><b>Нет примера</b>: «Это предположение, а не факт».</li>
+        <li><b>Исключение</b>: «Один случай — не правило».</li>
+        <li><b>Подмена понятий</b>: «Вы говорите о вежливости, а тема о лжи».</li>
+        <li><b>Короткий взгляд</b>: «А что будет через год?»</li>
+        <li><b>До абсурда</b>: «Если так, то можно и…»</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="note blue" style="margin-top:14px">
+    <p><b>Ловушка слов-абсолютов.</b> Во многих темах есть «всегда», «каждый», «только», «обязан», «нельзя» (темы 18, 19, 27, 29, 31, 32, 33, 37). <b>Если ты ПРОТИВ</b>, тебе хватит одного-двух сильных контрпримеров, добивайся, чтобы соперник их признал. <b>Если ты ЗА</b>, в первой же речи скажи: «Мы говорим о правиле, а не об исключениях. Исключение не отменяет правило». В темах 6 и 38 («не все», «не каждый») всё наоборот: тут уже стороне ЗА хватит одного примера.</p>
+  </div>
+
+  <h3 style="margin-top:24px">Фразы-связки</h3>
+  <div class="grid2 phr">
+    <div class="panel"><h3>Начать и определить</h3><ul>
+      <li>Наша команда сегодня докажет, что…</li>
+      <li>Договоримся о словах: под … мы понимаем…</li>
+      <li>Главный вопрос сегодняшнего спора — …</li></ul></div>
+    <div class="panel"><h3>Перейти и привести пример</h3><ul>
+      <li>Перейдём ко второму аргументу.</li>
+      <li>Это хорошо видно на примере…</li>
+      <li>Возьмём ситуацию, знакомую каждому школьнику…</li></ul></div>
+    <div class="panel"><h3>Опровергнуть</h3><ul>
+      <li>Соперники утверждают, что… Но они упускают…</li>
+      <li>Это верно в одном случае, а тема говорит о правиле.</li>
+      <li>Пример соперников доказывает как раз нашу позицию, ведь…</li>
+      <li>Соперники подменили понятие: они говорят о …, а тема — о …</li></ul></div>
+    <div class="panel"><h3>Выиграть время и закончить</h3><ul>
+      <li>Важный вопрос. Посмотрим на него через наш критерий.</li>
+      <li>Вернусь к главному: …</li>
+      <li>Сегодня мы спорили о двух вещах. В первой… во второй…</li>
+      <li>Поэтому мы уверены, что… Спасибо!</li></ul></div>
+  </div>
+
+  <div class="note" style="margin-top:14px">
+    <p><b>Если завис посреди речи.</b> Остановись, вдохни, посмотри в карточку и скажи: «Вернусь к главному». Потом повтори тезис. Со стороны это выглядит как пауза для акцента. Пиши на карточке не текст, а 5–7 ключевых слов крупно.</p>
+  </div>
+</section>
+
+<!-- Q&A -->
+<section id="qa">
+  <h2>Вопросы соперникам и ответы</h2>
+  <div class="grid2">
+    <div class="panel">
+      <h3>Как спрашивать</h3>
+      <ul class="list">
+        <li>Задавай <b>закрытые</b> вопросы, на которые отвечают «да» или «нет».</li>
+        <li>Строй <b>цепочку</b>: два вопроса, с которыми соперник согласится, а третий выводит на противоречие.</li>
+        <li>Не спорь во время вопросов. Ответ соперника используй в своей речи: «Соперники сами признали, что…»</li>
+        <li>Беспроигрышные вопросы: «Что вы понимаете под …?», «Это исключение или правило?», «Какой у вас пример?»</li>
+      </ul>
+    </div>
+    <div class="panel">
+      <h3>Как отвечать</h3>
+      <ul class="list">
+        <li>1–2 предложения, потом возврат к своему аргументу: «Да, и именно поэтому…»</li>
+        <li>Не говори «не знаю». Скажи: «С точки зрения нашего критерия…»</li>
+        <li>Можно согласиться частично: «Бывает. Но тема не об исключениях».</li>
+        <li>Видишь, что тебя ведут в ловушку, — не соглашайся с обобщением: «Не всегда».</li>
+        <li>Не понял вопрос — переспроси: «Уточните, что вы имеете в виду под…»</li>
+      </ul>
+    </div>
+  </div>
+  <div class="panel" style="margin-top:14px">
+    <h3>Пример цепочки (тема 1, ты ЗА)</h3>
+    <p style="margin:0">— Вы согласны, что жизнь человека важнее правила? <span class="muted">(«Да»)</span><br>
+    — Вы согласны, что правило «не лги» придумано, чтобы людям жилось лучше? <span class="muted">(«Да»)</span><br>
+    — Тогда если правда приведёт к гибели человека, правило должно уступить? <span class="muted">(Тут соперник либо соглашается с вами, либо выглядит бессердечным.)</span></p>
+  </div>
+</section>
+
+<!-- LINES -->
+<section id="lines">
+  <h2>9 линий: 40 тем сводятся к девяти спорам</h2>
+  <p class="sec-intro">Не нужно зубрить 40 тем по отдельности. Почти каждая — вариант одного из девяти главных споров. Разберись в этих девяти, и на любую тему у тебя найдутся аргументы. У каждой стороны 3 аргумента и 3 примера: из книги, из жизни и факт.</p>
+  <div class="lines" id="linesBox"></div>
+</section>
+
+<!-- TOPICS -->
+<section id="topics">
+  <h2>40 тем: аргументы за обе стороны</h2>
+  <p class="sec-intro">Темы 1–10 только для 8–9 классов, 11–40 общие для всех категорий. Тема 16 в документе повторяет тему 10. Отмечай темы, которые готов защищать с любой стороны, — отметки сохраняются в этом браузере.</p>
+  <div class="tools">
+    <input id="q" class="search" type="search" placeholder="Поиск: слово из темы или пример, например «Гринёв»" aria-label="Поиск по темам">
+    <div class="chips" id="chips" role="group" aria-label="Фильтр по линиям"></div>
+    <div class="progress"><span id="pText">Готово 0 из 39</span><div class="pbar"><i id="pBar"></i></div></div>
+  </div>
+  <div class="topics" id="topicsBox"></div>
+</section>
+
+<!-- EXAMPLES -->
+<section id="examples">
+  <h2>Банк примеров</h2>
+  <p class="sec-intro">Выучи 10–12 примеров так, чтобы пересказать каждый за 20 секунд. Один пример подходит к пяти-шести темам. Номера под карточкой — подходящие темы. Лучшая связка в одной речи: один пример из «Капитанской дочки» или басни Крылова и один из жизни. Фильмы держи в запасе.</p>
+  <div id="exBox"></div>
+</section>
+
+<!-- TRAINER -->
+<section id="trainer">
+  <h2>Тренажёр</h2>
+  <p class="sec-intro">Как в жизни: случайная тема, случайная позиция. Минута на подготовку, потом речь вслух. Запиши себя на диктофон и послушай: так быстрее всего видно, где «э-э-э» и где нет примера.</p>
+  <div class="trainer">
+    <div class="card-draw" aria-live="polite">
+      <div><span class="draw-side pro" id="dSide">ЗА</span> <span class="eyebrow" id="dNum">тема 1</span></div>
+      <div class="draw-title" id="dTitle">Ложь во спасение морально оправдана</div>
+      <div class="btns">
+        <button class="btn primary" id="drawBtn" type="button">Новая тема</button>
+        <button class="btn" id="hintBtn" type="button">Показать подсказку</button>
+      </div>
+      <div class="hint" id="hintBox" hidden></div>
+    </div>
+    <div class="panel">
+      <div class="timer">
+        <div class="clock" id="clock">1:00</div>
+        <div class="btns">
+          <button class="btn" type="button" data-t="60">Подготовка 1:00</button>
+          <button class="btn" type="button" data-t="120">Речь 2:00</button>
+          <button class="btn" type="button" data-t="180">Речь 3:00</button>
+          <button class="btn" type="button" id="stopBtn">Стоп</button>
+        </div>
+      </div>
+      <p class="muted" style="margin:10px 0 0;font-size:14px">Последние 15 секунд таймер краснеет: пора говорить «Итак…». Время речи уточни в регламенте.</p>
+    </div>
+  </div>
+</section>
+
+<!-- PLAN -->
+<section id="plan">
+  <h2>План подготовки</h2>
+  <div class="plan">
+    <div class="day"><div class="d">День 1<small>около 1,5 часа</small></div><div>Прочитай «9 линий». Выучи шаблон речи и формулу «Тезис — Почему — Например — Значит». Расскажи вслух две любые темы по шаблону, с бумажкой можно.</div></div>
+    <div class="day"><div class="d">День 2<small>около 1,5 часа</small></div><div>Выучи 10–12 примеров из банка. В тренажёре прогони 5 тем: минута подготовки, две минуты речи, запись на телефон. Отметь в списке темы, которые уже уверенно держишь.</div></div>
+    <div class="day"><div class="d">День 3<small>с командой</small></div><div>Распределите роли. Сыграйте 2–3 мини-боя друг против друга: двое ЗА, один ПРОТИВ, потом поменяйтесь. Потренируйте вопросы-цепочки. Договоритесь о знаках: «время», «ответь на вопрос», «повтори тезис».</div></div>
+    <div class="day"><div class="d">Накануне</div><div>Никакой зубрёжки. Перечитай девять линий и примеры, выспись. Собери вещи по чек-листу.</div></div>
+  </div>
+  <div class="panel" style="margin-top:14px">
+    <h3>Чек-лист на день игры</h3>
+    <ul class="check" id="checklist">
+      <li><input type="checkbox" id="c1"><label for="c1">Пустые карточки или блокнот, две ручки (для флоу и записок)</label></li>
+      <li><input type="checkbox" id="c2"><label for="c2">Распечатка «9 линий» и банка примеров на одном листе</label></li>
+      <li><input type="checkbox" id="c3"><label for="c3">Часы или секундомер (телефон могут попросить убрать)</label></li>
+      <li><input type="checkbox" id="c4"><label for="c4">Вода. Перед выходом три медленных вдоха.</label></li>
+      <li><input type="checkbox" id="c5"><label for="c5">Первая фраза речи выучена наизусть: «Уважаемые судьи, уважаемые соперники! Сегодня наша команда…»</label></li>
+      <li><input type="checkbox" id="c6"><label for="c6">Договорились с командой о критерии и о том, кто что говорит</label></li>
+    </ul>
+  </div>
+</section>
+
+<footer>Темы взяты из списка «Темы (2).docx»: Лига дебатов, муниципальный этап, общая тематика «Мораль». Примеры проверяй по тексту книги, если не уверен в деталях: судьи любят точность.</footer>
+</div>
+
+<script>
+var LINES = {
+  pravda:{n:"Правда или ложь",s:"Что важнее: правда как правило или люди, которым она может навредить.",
+    a:{h:"Правда важнее",args:[["Ложь раскрывается, и доверие рушится навсегда.","Рано или поздно правда всплывает. После этого человеку не верят, даже когда он говорит правду."],["Граница стирается.","Каждый лжец уверен, что его ложь «во благо». Сегодня врут, чтобы не расстроить, завтра — чтобы избежать неприятностей."],["Лжец решает за другого.","Он сам определяет, что человеку знать. Это неуважение: каждый имеет право на правду о своей жизни."]],
+      ex:[["«Капитанская дочка»","Пугачёв спросил Гринёва, будет ли тот ему служить. Гринёв мог соврать и спастись, но честно ответил, что присягал императрице. Пугачёв оценил честность и отпустил его. Значит, правда вызывает уважение даже у врага."],["Притча о мальчике и волках","Мальчик ради шутки кричал «Волки!». Сначала люди прибегали, потом перестали верить. Когда волки пришли на самом деле, на помощь не пришёл никто. Значит, ложь лишает доверия именно тогда, когда оно нужнее всего."],["Чернобыль, 1986","После аварии правду первые дни скрывали, и жителей Припяти эвакуировали только на второй день. Всё это время люди были под радиацией. Значит, сокрытие правды делает беду страшнее."]]},
+    b:{h:"Бывают исключения",args:[["Правило «не лги» существует ради людей.","Мы не лжём, чтобы людям жилось лучше. Если правда губит человека, правило теряет смысл."],["Иногда правда — меньшее добро.","Ложь может спасти жизнь, уберечь ребёнка от страха, подарить праздник. Тогда честность становится жестокостью."],["Честность без доброты превращается в грубость.","«Правда в лицо» часто ранит и разрушает отношения, ничего не исправив."]],
+      ex:[["«Капитанская дочка»","Когда пугачёвцы ворвались в крепость, Маша лежала больная в доме попадьи. Попадья сказала Пугачёву, что это её племянница. Правда, скорее всего, погубила бы Машу. Значит, ложь во спасение бывает оправдана."],["Дед Мороз","Почти все родители рассказывают детям про Деда Мороза. Это неправда, но обманщиками их никто не считает: они дарят детям чудо. Значит, не всякая ложь — зло."],["Бабушкин подарок","Бабушка неделю вязала тебе свитер, а он тебе не нравится. Почти каждый скажет «спасибо, классный», и это не подлость, а доброта. Значит, честность без доброты — просто грубость."]]},
+    note:"В темах 3 и 9 сторона «Правда важнее» — это ЗА. В теме 1 «Бывают исключения» — ЗА, в теме 36 — ПРОТИВ.",
+    ph:"«Правило „не лги“ придумано, чтобы людям жилось лучше. Значит, его смысл важнее буквы»."},
+  itog:{n:"Намерение или результат",s:"Оценивать поступок по тому, что человек хотел, или по тому, что получилось.",
+    a:{h:"Важнее результат",args:[["Пострадавшему не легче от добрых намерений.","Вред уже причинён. Слова «я не хотел» не вернут здоровье, деньги или отношения."],["Намерения не проверишь.","В чужую голову не заглянешь. Сказать «я хотел как лучше» может любой, а результат видят все."],["Думать о последствиях — тоже долг.","Человек отвечает не только за то, чего хотел, но и за то, что сделал."]],
+      ex:[["Крылов, «Пустынник и медведь»","Медведь подружился с пустынником. Когда тот уснул, на него села муха. Медведь хотел помочь, схватил камень и прихлопнул муху вместе с головой друга. Отсюда «медвежья услуга». Значит, добрых намерений мало."],["Кролики в Австралии","В 1859 году фермер выпустил два десятка кроликов, чтобы охотиться на них. Хищников не было, кролики расплодились до сотен миллионов и уничтожили посевы по всей стране. Значит, о последствиях нужно думать заранее."],["Таблетка другу","У друга болит голова, и ты даёшь ему свою таблетку. Ты хотел помочь, а у него аллергия, и пришлось вызывать скорую. Отвечать за последствия всё равно тебе. Значит, важен результат."]]},
+    b:{h:"Важнее намерение",args:[["Последствия часто не предскажешь.","Можно сделать всё честно и правильно, а беда случится из-за обстоятельств. Считать человека злодеем несправедливо."],["По одному результату можно оправдать подлость.","Если важен только итог, можно обманывать и предавать, лишь бы «вышло хорошо»."],["Закон тоже различает намерения.","Умышленное преступление наказывают строже, чем совершённое по неосторожности."]],
+      ex:[["«Капитанская дочка»","Генерал отказался посылать помощь Маше, и Гринёв самовольно уехал из Оренбурга в стан Пугачёва. Со стороны это выглядело изменой, и суд его осудил. Но императрица узнала, зачем он ехал, и помиловала его. Значит, судить нужно по намерениям."],["Врач","Врач сделал операцию по всем правилам, но пациента спасти не удалось. Никто не называет его убийцей: он хотел спасти и сделал всё, что мог. Значит, намерение важнее результата."],["Допинг в спорте","Спортсмен побеждает с допингом и получает золото. Когда обман раскрывается, медаль отбирают, а имя позорят. Значит, хороший результат не оправдывает нечестный путь."]]},
+    note:"В темах 10 и 16 сторона «Важнее результат» — это ЗА. В теме 12 тоже ЗА («цель оправдывает средства»).",
+    ph:"«Медведь из басни тоже хотел помочь»."},
+  spravedl:{n:"Справедливость, закон, милосердие",s:"Судить строго по правилам и заслугам или учитывать жалость, раскаяние и совесть.",
+    a:{h:"Строгость и правила",args:[["Милосердие к виновному несправедливо к жертвам.","Если обидчика пощадили, жертва остаётся без защиты, а он может обидеть кого-то ещё."],["Правила одни для всех.","Общие правила защищают слабых от сильных и честных от «любимчиков». Без них прав тот, у кого больше сил."],["Мораль у каждого своя.","Если каждый поставит свою мораль выше закона, начнутся хаос и самосуд."]],
+      ex:[["Крылов, «Волк и Ягнёнок»","Волк хочет съесть ягнёнка и придумывает обвинения. Ягнёнок легко оправдывается, но волк всё равно его съедает: «У сильного всегда бессильный виноват». Значит, без справедливых правил побеждает сильный, а не правый."],["Крылов, «Кот и Повар»","Повар застал кота Ваську за кражей курицы и стал читать ему мораль, а «Васька слушает да ест». Крылов советует не тратить слов там, где нужно употребить власть. Значит, где нужна строгость, уговоры не работают."],["Судья в футболе","Представь судью, который не назначает пенальти любимой команде, потому что ему её жалко. Такую игру никто не будет уважать. Значит, правила должны быть одни для всех."]]},
+    b:{h:"Милосердие и совесть",args:[["Справедливость без милосердия — жестокость.","Наказание «строго по правилам» не учитывает обстоятельств. К тому же суд может ошибиться."],["Законы пишут люди.","Законы бывают несправедливыми и устаревшими. Когда закон расходится с совестью, слушать нужно совесть."],["Прощение исправляет.","Человек, которому дали шанс, чаще меняется к лучшему, чем тот, кого только наказали."]],
+      ex:[["«Капитанская дочка»","Невиновного Гринёва осудили как изменника. Маша поехала в Петербург, встретила императрицу и рассказала правду. Екатерина II помиловала Гринёва. Значит, милосердие может исправить ошибку строгого суда."],["Скорая на красный свет","Правила запрещают ехать на красный, но скорая с мигалкой едет, и все её пропускают. Значит, даже закон признаёт, что жизнь важнее правила."],["Второй шанс","Ученик две недели болел и провалил контрольную. По правилам — двойка, но учитель разрешил переписать, и ученик впервые подготовился всерьёз. Значит, милосердие помогает стать лучше."]]},
+    note:"В темах 11 и 17 «Строгость и правила» — это ЗА. В темах 14 и 15 «Милосердие и совесть» — ЗА.",
+    ph:"«Одинаково — не значит справедливо»."},
+  dolg:{n:"Долг или свобода",s:"Обязан ли человек помогать, защищать и жертвовать или это его добрая воля.",
+    a:{h:"Долг",args:[["Беда не ждёт удобного момента.","Пожар, болезнь, травля случаются внезапно. Если помогать только когда удобно, помощь всегда опоздает."],["Это взаимная страховка.","Сегодня ты защищаешь слабого, завтра слабым можешь оказаться ты: в старости, в болезни, в беде."],["На верности слову держится всё.","Без неё нет ни дружбы, ни дела, ни государства. Если обещания ничего не стоят, никто никому не верит."]],
+      ex:[["«Капитанская дочка»","Пугачёв потребовал от офицеров присягнуть ему. Капитан Миронов отказался и был казнён. Гринёв тоже отказался и уже стоял под виселицей. Читатель уважает именно их. Значит, держать слово — обязанность человека чести."],["Человек-паук","Дядя Бен говорит Питеру Паркеру: «С большой силой приходит большая ответственность». Питер понимает это слишком поздно, когда из-за его бездействия погибает сам дядя Бен. Значит, кто может помочь, тот обязан помочь."],["Врачи и пожарные","В пандемию врачи работали сутками и многие заражались сами. Пожарные каждый день идут в огонь. Если бы они помогали только когда безопасно, люди бы гибли. Значит, помогать даже в ущерб себе — долг."]]},
+    b:{h:"Свобода",args:[["Подвиг по принуждению — уже не подвиг.","Добро ценно, когда человек делает его по своей воле. Обязательная помощь превращается в повинность."],["Обязанность должна быть посильной.","Нельзя требовать от человека больше, чем он может. Навредишь себе — никому не поможешь."],["Есть долг перед своими.","У человека есть семья и родители. Нельзя отдать всё чужим и оставить без помощи самых близких."]],
+      ex:[["Крылов, «Стрекоза и Муравей»","Стрекоза всё лето пела, а зимой пришла к муравью просить еды. Муравей отказал: «Ты всё пела? Это дело: так пойди же, попляши!» Значит, человек не обязан расплачиваться за чужую беспечность."],["Маска в самолёте","Перед взлётом объясняют: маску сначала наденьте на себя, потом на ребёнка. Спасателей тоже учат сначала думать о своей безопасности. Значит, помощь не должна быть в ущерб себе."],["Волонтёрство","Волонтёры, которые пришли сами, работают с душой. А тех, кого отправили на субботник «добровольно-принудительно», стараются кое-как. Значит, добро работает, только когда оно свободное."]]},
+    note:"В темах 7, 29, 32, 33 «Долг» — это ЗА. В теме 6 «Свобода» ближе к ЗА: героями становятся не все, и это нормально.",
+    ph:"«Кто тогда будет тушить пожары?» / «Почему спасателей учат сначала думать о своей безопасности?»"},
+  trud:{n:"Труд или талант",s:"Что важнее для успеха и чего человек заслуживает — дар или работа.",
+    a:{h:"Труд",args:[["Талант без работы пропадает.","Способности — только заготовка. Сколько способных ребят бросили музыку или спорт, потому что не хотели заниматься."],["Упорство важнее способностей.","Психолог Анджела Дакворт изучала курсантов, школьников и спортсменов: до финиша чаще доходят самые упорные, а не самые способные."],["Способный расслабляется.","Ему кажется, что «и так получится». А трудолюбивый идёт до конца, как черепаха, которая обогнала зайца."]],
+      ex:[["Крылов, «Стрекоза и Муравей»","Муравей всё лето трудился и запасался едой, а стрекоза пела и плясала. Пришла зима, и у муравья всё есть, а стрекоза осталась ни с чем. Значит, успех приходит к тому, кто трудится."],["Криштиану Роналду","В детстве Роналду был худым и слабее других. Он известен тем, что приходит на тренировку первым и уходит последним, и играет на высоком уровне в возрасте, когда многие давно закончили. Значит, трудолюбие делает чемпионом."],["Майкл Джордан","В школе его не взяли в основную баскетбольную команду. Он не бросил, а стал тренироваться ещё больше и стал одним из величайших баскетболистов в истории. Значит, упорство сильнее неудач."]]},
+    b:{h:"Талант",args:[["Способности задают потолок.","Рост, музыкальный слух, скорость реакции не натренируешь. Без них даже огромный труд не приведёт к вершине."],["Талантливый учится быстрее.","При одинаковом труде он добьётся большего: то, что другим даётся тяжело, ему даётся легко."],["Трудиться можно впустую.","Важно не сколько часов работаешь, а насколько получается. Трудолюбивый, но неумелый может годами биться в стену."]],
+      ex:[["Крылов, «Квартет»","Мартышка, Осёл, Козёл и Мишка решили сыграть квартет. Ничего не выходило, и они всё пересаживались. Соловей объяснил: «Чтоб музыкантом быть, так надобно уменье». Значит, старания мало, нужны способности."],["Рост в баскетболе","Средний рост игроков НБА около двух метров. Можно тренироваться с утра до ночи, но рост не нарастишь. Значит, в некоторых делах способности решают больше, чем труд."],["Одноклассник","В каждом классе есть ученик, который понимает тему с первого объяснения, а другим нужно три вечера. Работают все, а результат разный. Значит, способности дают преимущество."]]},
+    note:"В теме 8 «Труд» — это ЗА. В теме 13 «Талант» — ЗА.",
+    ph:"«Назовите великого человека, который добился всего без труда»."},
+  dengi:{n:"Деньги и выгода",s:"Портят ли деньги человека и можно ли ставить свою выгоду выше морали.",
+    a:{h:"Деньги и выгода опасны",args:[["Деньги дают власть и безнаказанность.","Богатому кажется, что ему всё можно. Это испытание выдерживают немногие."],["Погоня за выгодой вытесняет совесть.","Человек начинает мерить всё деньгами: дружбу, помощь, даже людей."],["Кто ставит выгоду выше честности, того можно купить.","Такого человека можно уговорить на любую подлость, предложив больше. Поэтому ему никто не доверяет."]],
+      ex:[["«Капитанская дочка»","Молодой Гринёв проиграл в бильярд сто рублей офицеру Зурину. Это были большие деньги, и Савельич уговаривал не платить. Но Гринёв отдал долг: он дал слово. Значит, честное слово дороже денег."],["Крылов, «Ворона и Лисица»","Лисица увидела у Вороны сыр и стала её расхваливать: и перья хороши, и голос, наверное, ангельский. Ворона каркнула, и сыр упал. Значит, ради выгоды люди становятся лжецами."],["Крылов, «Свинья под дубом»","Свинья наелась желудей и тут же стала подрывать корни дуба. Ей было всё равно, что дуб засохнет и желудей больше не будет. Значит, жадный думает только о себе и о сегодняшнем дне."]]},
+    b:{h:"Деньги — инструмент",args:[["Деньги проявляют, а не меняют.","Жадный был жадным и до богатства, а щедрый с деньгами становится ещё щедрее."],["Деньги позволяют делать добро в большом масштабе.","Больницы, фонды, музеи, школы строятся на деньги. Без них добрые намерения остаются словами."],["Своя выгода — это нормально.","Заботиться о себе и семье не стыдно, если никому не вредишь. А бедность тоже толкает людей на плохое."]],
+      ex:[["Третьяковская галерея","Купец Павел Третьяков почти сорок лет покупал картины русских художников, а потом подарил всю коллекцию Москве. Так появилась Третьяковская галерея. Значит, деньги в руках хорошего человека — это добро."],["Фонд Хабенского","Актёр Константин Хабенский создал фонд, который помогает детям с тяжёлыми болезнями мозга. Благодаря ему многие дети получили лечение. Значит, деньги помогают спасать жизни."],["Родители","Многие родители выбирают работу, где платят больше, хотя она тяжелее. Они делают это ради детей. Это не жадность, а забота. Значит, стремиться к выгоде нормально."]]},
+    note:"В темах 4, 19, 28 «Деньги и выгода опасны» — это ЗА.",
+    ph:"«Ножом режут хлеб, а можно ранить. Виноват не нож»."},
+  dobro:{n:"Доброта и чувства",s:"Доброта, жалость, сострадание, зависть, равнодушие: что из этого сила, а что вред.",
+    a:{h:"Добрые чувства — сила",args:[["Сострадание сплачивает.","В беде люди выживают вместе. Общество, где помогают слабым, переживает кризисы легче."],["Равнодушие — первый шаг к злу.","Зло побеждает не только потому, что есть злые люди, но и потому, что остальные молчат и проходят мимо."],["Доброта требует силы.","Отдавать, прощать, помогать гораздо труднее, чем обижаться и думать о себе. Это выбор сильного."]],
+      ex:[["«Капитанская дочка»","Гринёв заблудился в метель, и дорогу показал случайный бродяга. Гринёв подарил ему заячий тулуп. Бродягой оказался Пугачёв: он запомнил добро и потом спас Гринёву жизнь. Значит, доброта без расчёта возвращается."],["Крылов, «Листы и Корни»","Листья хвастались, что украшают дерево и дают тень. Корни напомнили, что листья живут только благодаря им, хотя корни никто не видит. Значит, настоящая доброта работает незаметно и не просит похвалы."],["Человеку плохо на улице","Мимо идут десятки людей, и каждый думает, что поможет кто-то другой. Но стоит одному остановиться и вызвать скорую, подходят и другие. Значит, одно доброе действие запускает добро вокруг."]]},
+    b:{h:"Чувство без разума вредит",args:[["Слепая жалость унижает.","Человеку нужно уважение, а не «бедненький». Жалость ставит его ниже других."],["Бесконечная доброта поощряет наглость.","Если всё прощать и всем уступать, человек привыкает и требует всё больше. Страдают те, кого он обижает."],["Чувство — ещё не поступок.","Можно пожалеть человека и пройти мимо. Ценно не чувство, а действие."]],
+      ex:[["Пушкин, «Сказка о рыбаке и рыбке»","Старик выполнял каждое желание старухи: корыто, избу, дворянство, царство. Чем больше он уступал, тем злее и жаднее она становилась. Кончилось всё разбитым корытом. Значит, доброта без границ поощряет наглость."],["Паралимпийцы","Спортсмены-паралимпийцы часто говорят, что не хотят жалости. Они годами тренируются и хотят уважения как спортсмены. Значит, жалость может унижать."],["Зависть в соцсетях","Листаешь соцсети, видишь чужие фото с моря и новые телефоны и чувствуешь себя хуже, хотя у тебя всё нормально. Это зависть, и она не даёт ничего, кроме плохого настроения. Значит, некоторые чувства только разрушают."]]},
+    note:"В темах 22, 24, 27, 30 «Добрые чувства — сила» — это ЗА. В теме 2 ЗА — «Чувство без разума вредит». Темы 21 (зависть) и 35 (равнодушие) — о плохих чувствах: там ЗА доказывает, что они вредят.",
+    ph:"«Доброта — это поступок, а не настроение»."},
+  proshch:{n:"Прощение и верность",s:"Можно ли простить всё, обязательно ли прощать и бывает ли оправданное предательство.",
+    a:{h:"Прощать и хранить верность",args:[["Прощение освобождает обиженного.","Обида годами отнимает силы и радость. Простив, человек перестаёт жить прошлым."],["Без прощения не живут ни семья, ни дружба.","Ошибаются все. Если никогда не прощать, рядом не останется никого."],["Верность — основа доверия.","Команда, семья, страна держатся на том, что свои не предают. Предатель разрушает их изнутри."]],
+      ex:[["Пушкин, «Сказка о царе Салтане»","Ткачиха, повариха и сватья баба Бабариха оклеветали царицу, и её с сыном бросили в море в бочке. Когда правда открылась, Салтан на радостях их простил и отпустил домой. Сказка кончается пиром, а не казнью. Значит, прощение делает людей счастливее, чем месть."],["«Капитанская дочка»","Когда Пугачёв собирался повесить Гринёва, старый слуга Савельич бросился ему в ноги и просил повесить его вместо барина. А Швабрин перешёл к бунтовщикам, чтобы спасти себя. Савельича читатель любит, Швабрина презирает. Значит, верность ценится, а предательство не оправдать."],["Нельсон Мандела","Мандела боролся против несправедливых законов в ЮАР и провёл в тюрьме 27 лет. Став президентом, он выбрал не месть, а примирение, и страна избежала гражданской войны. Значит, прощение сильнее мести."]]},
+    b:{h:"Не всё прощается, верность не слепая",args:[["Прощение без раскаяния поощряет новые обиды.","Если обидчик не признал вину, а его простили, он понимает, что всё сойдёт с рук."],["Есть непоправимые поступки.","Убийство или предательство не исправишь. Простить может только пострадавший, никто не вправе прощать за него."],["Верность злу — не добродетель.","Если твоя компания делает плохое, рассказать правду — не предательство, а честность."]],
+      ex:[["Травля в классе","Обидчика вызывают к директору, он говорит «больше не буду», его прощают, а на следующий день всё повторяется. Значит, прощение без настоящего раскаяния поощряет зло."],["Рассказать о буллинге","Ученик увидел, что одноклассника бьют за школой, и рассказал учителю. Обидчики назвали его «стукачом». Но он не предал друзей, а защитил человека. Значит, верность тем, кто творит зло, — не добродетель."],["Военные преступления","По конвенции ООН 1968 года у военных преступлений нет срока давности: виновных судят даже через десятки лет. Значит, есть поступки, которые общество не прощает никогда."]]},
+    note:"В темах 18 и 23 «Прощать и хранить верность» — это ЗА. В темах 5 и 38 ЗА — «Не всё прощается».",
+    ph:"«Простить — не значит отменить наказание»."},
+  harakter:{n:"Характер и лидер",s:"Что делает человека и лидера достойным — выбор, смелость, честность или умения.",
+    a:{h:"Решает характер",args:[["Человека видно в трудный момент.","Пока всё спокойно, все хорошие. Кто ты на самом деле, показывает выбор, когда страшно."],["Умениям можно научить, совести — почти нет.","Умный, но бесчестный лидер приведёт команду к беде тем быстрее, чем он умнее."],["Команда идёт за тем, кому верит.","Лидер — пример. Если капитан хитрит и обманывает, вся команда начинает хитрить."]],
+      ex:[["«Капитанская дочка»","Гринёв и Швабрин — молодые офицеры в одной крепости. Когда пришёл Пугачёв, оба выбирали: присяга или жизнь. Гринёв сохранил честь, Швабрин предал. Значит, моральный выбор определяет личность."],["Пугачёв в истории","Пугачёв поднял огромное восстание, но соратники ему не доверяли. В 1774 году они сами схватили его и выдали властям, чтобы спасти себя. Значит, лидера, которому не верят, рано или поздно предают."],["Заступиться за новенького","В класс пришёл новенький, и над ним начали издеваться. Многим это не нравится, но заступается обычно один, у кого хватает смелости. Значит, нравственный поступок требует характера."]]},
+    b:{h:"Решают умения и обстоятельства",args:[["Личность складывается из многого.","Воспитание, семья, среда, природа. Один выбор в стрессе может быть случайностью, а не сутью человека."],["Лидеру прежде всего нужны умения.","Добрый, но неумелый лидер тоже приведёт к беде: его решения из лучших побуждений окажутся ошибками."],["Лидер не обязан говорить всё.","У лидера бывают тайны, которые он должен хранить, и моменты, когда правда вызовет панику."]],
+      ex:[["Крылов, «Лебедь, Рак и Щука»","Лебедь, Рак и Щука взялись везти воз и старались изо всех сил, но лебедь тянул в небо, рак пятился назад, а щука тянула в воду. «А воз и ныне там». Значит, без умелого руководства старание ничего не даёт."],["«Капитанская дочка»","Капитан Миронов был честным и храбрым, но в его крепости была одна старая пушка, а гарнизон состоял из солдат-инвалидов. Когда пришёл Пугачёв, крепость пала почти сразу. Значит, одной честности лидеру мало."],["Пилот самолёта","Садясь в самолёт, ты хочешь, чтобы пилот умел летать. Насколько он честен в жизни, ты даже не знаешь. Значит, профессиональные качества часто важнее морали."]]},
+    note:"В темах 26, 31, 39, 40 «Решает характер» — это ЗА. В теме 37 («лидер всегда честен») — тоже ЗА.",
+    ph:"«Вы сядете в самолёт к честному пилоту, который не умеет летать?»"}
+};
+
+var T = [
+{n:1,t:"Ложь во спасение морально оправдана",l:"pravda",
+k:"«Во спасение» — значит, ложь спасает жизнь, здоровье или человека от настоящей беды, а не от неловкости. Спор идёт о том, что важнее: правило «не лги» или жизнь и благо человека.",
+p:[["Жизнь важнее правила.","Если правда приведёт к беде, ложь — меньшее зло. Оскар Шиндлер обманывал нацистов и спас около 1200 человек."],
+["Ложь бывает спасением в прямом смысле.","В «Капитанской дочке» попадья выдала Машу Миронову за свою больную племянницу и тем спасла её от пугачёвцев."],
+["Так поступают ради надежды.","Врач бережно подбирает слова для тяжелобольного, родители не рассказывают малышу всех страшных подробностей. Надежда помогает выжить."]],
+c:[["Лжец решает за другого.","Он берёт на себя право определять, что человеку знать. Это неуважение к нему."],
+["Ложь раскрывается, и доверие рушится.","После этого человеку не верят даже тогда, когда он говорит правду."],
+["Почти всегда есть третий путь.","Промолчать, сказать правду мягко, помочь по-другому. «Спасение» — часто оправдание, чтобы не искать честный выход. Сегодня ложь «во спасение другого», завтра «во спасение своей репутации»."]],
+qp:"«Если бы правда стоила жизни вашему другу, вы бы сказали правду?»",
+qc:"«Кто решает, что ложь „спасительная“, — сам лжец? А если он ошибся?»"},
+
+{n:2,t:"Доброта без границ превращается в слабость",l:"dobro",
+k:"«Без границ» — помогать всем и всегда, не уметь отказать, ничего не требовать взамен. «Слабость» — тобой пользуются, ты не можешь защитить ни себя, ни других.",
+p:[["Безграничная уступчивость растит наглость.","Старик из «Сказки о рыбаке и рыбке» исполнял все прихоти старухи, а она становилась всё жаднее и злее. Кончилось разбитым корытом. А тем, кто не умеет отказать, часто просто пользуются."],
+["Безграничная доброта к злу вредит жертвам.","Если раз за разом прощать хулигана, страдает тот, кого он обижает."],
+["Без границ человек выгорает.","Кто отдаёт всё, тому не остаётся сил помогать дальше. В самолёте маску сначала надевают на себя."]],
+c:[["Доброта требует силы.","Отдавать, прощать, помогать трудно. Это выбор сильного, а слабый обороняется и копит обиды."],
+["Добрые люди — опора для всех.","Волонтёры, сиделки, учителя, которые остаются после уроков. Они отдают много, и на них держится всё вокруг. Это не слабость, а сила."],
+["Граница нужна не доброте, а наивности.","Соперники путают доброту с попустительством. Можно быть безгранично добрым и при этом умным: помогать по-настоящему, а не потакать."]],
+qp:"«Если человек никогда не может отказать, его доброту используют — согласны?»",
+qc:"«Где именно граница? В какой момент доброты становится „слишком много“?»"},
+
+{n:3,t:"Честный человек вызывает больше доверия",l:"pravda",
+k:"Доверие — готовность положиться на человека. Спор о том, доверяют ли в жизни честным или тем, кто обаятелен и говорит приятное.",
+p:[["Доверие строится на предсказуемости.","Если человек не врёт, его словам можно верить. Гринёв в «Капитанской дочке» не солгал Пугачёву даже под угрозой смерти, и Пугачёв ему поверил и отпустил."],
+["Честность — главный капитал.","Купеческое «честное слово» в старой России заменяло договор. Репутация честного стоит дороже разовой выгоды."],
+["Обманщика рано или поздно раскрывают.","Мальчик из притчи ради шутки кричал «Волки!», а когда волки пришли на самом деле, ему никто не поверил."]],
+c:[["Люди часто верят уверенным, а не честным.","Лисица из басни Крылова льстила Вороне, и та поверила. Телефонные мошенники работают так же: говорят уверенно и то, что человек хочет услышать."],
+["Слишком честных считают грубыми.","Если сказать однокласснику в лицо всё, что думаешь о его внешности или работе, он скорее обидится, чем станет тебе доверять."],
+["Доверие зависит и от умений.","Честному, но неопытному хирургу вы операцию не доверите."]],
+qp:"«Вы бы доверили секрет человеку, который вам уже врал?»",
+qc:"«Если доверяют только честным, почему мошенники так легко обманывают людей?»"},
+
+{n:4,t:"Деньги портят человека",l:"dengi",
+k:"«Портят» — делают хуже, чем человек был: жаднее, черствее, высокомернее. Спор о том, виноваты деньги или сам человек.",
+p:[["Деньги дают власть и безнаказанность.","Это испытание выдерживают немногие. Известно много историй, когда люди после внезапного богатства ссорились с близкими и за несколько лет всё теряли."],
+["Погоня за деньгами вытесняет совесть.","Свинья из басни Крылова «Свинья под дубом» наелась желудей и подрывает корни дуба, который её кормит. Жадный думает только о себе и о сегодняшнем дне."],
+["Это подтверждают исследования.","Психологи из Беркли (Пол Пифф, 2012) заметили, что в экспериментах более обеспеченные участники чаще вели себя эгоистично. Внезапное богатство часто ссорит людей с близкими."]],
+c:[["Деньги — инструмент.","Ножом режут хлеб, а можно ранить. Купец Павел Третьяков потратил состояние на картины и подарил галерею Москве."],
+["Деньги только проявляют человека.","Жадный был жадным и до богатства, а щедрый с деньгами становится ещё щедрее. Деньги не создают характер, а показывают его."],
+["Бедность портит не меньше.","Из-за нужды люди воруют и лгут. Значит, дело не в количестве денег, а в характере."]],
+qp:"«Почему люди после внезапного богатства так часто ссорятся с близкими?»",
+qc:"«Третьякова и Морозова деньги испортили?»"},
+
+{n:5,t:"Прощать обидчика не обязательно",l:"proshch",
+k:"«Не обязательно» не значит «нельзя». ЗА защищает право выбора. ПРОТИВ должен доказать, что прощать нужно, что это почти долг.",
+p:[["Прощение нельзя требовать.","Это дар. Прощение под давлением — фальшь, а не прощение."],
+["Прощение без раскаяния поощряет новые обиды.","Если травлю в классе каждый раз «прощают», она продолжается."],
+["Не простить — не значит мстить.","Можно перестать общаться и жить дальше. Отказ прощать — не ненависть, а защита себя."]],
+c:[["Обида разрушает самого обиженного.","Злость годами отнимает силы и радость. Простить — значит освободиться."],
+["Прощение спасает больше, чем месть.","Нельсон Мандела провёл в тюрьме 27 лет, а став президентом ЮАР, не стал мстить. Это уберегло страну от гражданской войны."],
+["Без прощения не живут ни семья, ни дружба.","Ошибаются все. Если никто не прощает, все в ссоре со всеми."]],
+qp:"«Обязана ли жертва травли прощать того, кто даже не извинился?»",
+qc:"«Вам когда-нибудь становилось легче оттого, что вы держали обиду?»"},
+
+{n:6,t:"Героями становятся не все",l:"dolg",
+k:"Тема почти очевидна, поэтому ПРОТИВ должен сместить спор: героем может стать любой, и героизм бывает не только на войне. ЗА: героизм — редкость, и это нормально.",
+p:[["В опасности большинство теряется.","Психологи описали «эффект свидетеля»: чем больше людей видят беду, тем реже кто-то помогает."],
+["Иначе слово «герой» теряет смысл.","Героев ценят как раз потому, что их мало."],
+["Героизм требует смелости, обстоятельств и готовности рисковать.","У многих такой ситуации в жизни просто не случается, и в этом нет ничего плохого."]],
+c:[["Героизм — решение, а не суперсила.","Пожарные, врачи, прохожие, которые вытаскивают людей из горящих машин, — не супергерои из кино. Это обычные люди, которые в нужный момент не отвернулись."],
+["Бывает ежедневный героизм.","Донор крови, волонтёр, учитель в сельской школе. При таком взгляде героем может стать любой."],
+["«Не все» — вредная установка.","Скажи людям, что героизм не для них, и они даже не попробуют. Важнее, что героем может стать каждый."]],
+qp:"«Сколько человек из вашего класса бросились бы в горящий дом?»",
+qc:"«Донор, спасший жизнь, — герой? Тогда героем может стать любой»."},
+
+{n:7,t:"Богатые должны помогать бедным",l:"dolg",
+k:"«Должны» — моральный долг или обязанность по закону? Лучше сразу договориться о моральном долге. ПРОТИВ защищает добровольность и личную ответственность.",
+p:[["Богатство создаётся обществом.","Рабочими, покупателями, дорогами, школами. Справедливо вернуть часть обратно."],
+["Это выгодно самим богатым.","Где меньше бедности, там меньше преступности и больше покупателей."],
+["Так было принято в России.","Третьяков, Морозов, Бахрушины строили больницы, школы и музеи. Меценатство считалось долгом состоятельного человека."]],
+c:[["Помощь по принуждению — уже не добро.","Ценна добровольная помощь. «Должны» превращает её в налог."],
+["Раздача денег не решает бедность.","Лучше давать работу и образование: удочку, а не рыбу. Богатый, который создаёт рабочие места, уже помогает."],
+["Почему именно богатые?","Помогать может каждый. За бедность отвечают и государство, и сами люди."]],
+qp:"«Если у человека миллиард, а сосед голодает, — нормально пройти мимо?»",
+qc:"«Если помощь — обязанность, чем она отличается от налога?»"},
+
+{n:8,t:"Трудолюбивый человек успешнее способного",l:"trud",
+k:"Сначала определите «успех»: достигнутая цель, результат, признание. ЗА — победит труд. ПРОТИВ — решают способности или нужно и то и другое.",
+p:[["Способности без работы ничего не дают.","Эдисон перебрал тысячи материалов, прежде чем лампа заработала. Ему приписывают слова: «гений — это 1% вдохновения и 99% пота»."],
+["Упорство важнее одарённости.","Ломоносов пешком пришёл из Холмогор в Москву, учился рядом с малышами и стал великим учёным. Психолог Анджела Дакворт показала: упорство предсказывает, кто дойдёт до финиша, лучше, чем IQ."],
+["Способный часто расслабляется.","«И так получится». Как в басне о зайце и черепахе: побеждает тот, кто идёт до конца."]],
+c:[["Способности задают потолок.","Рост баскетболиста, слух музыканта. В басне Крылова «Квартет» звери старались изо всех сил, но без умения музыки не вышло."],
+["Способный учится быстрее.","При одинаковом труде он добьётся большего."],
+["Трудиться можно впустую.","Успех зависит от умения работать с умом, а не просто много. Трудоголик может годами биться в стену."]],
+qp:"«Назовите великого человека, который добился успеха без труда»",
+qc:"«Если всё решает труд, почему не каждый, кто много тренируется, становится чемпионом?»"},
+
+{n:9,t:"Выдавать чужую работу за свою — нечестно",l:"pravda",
+k:"У ЗА сильная позиция. ПРОТИВ стоит спорить о границах: командная работа, заимствование идей, авторы-«призраки», договорённость сторон.",
+p:[["Это обман всех.","И учителя, который оценивает, и тех, кто работал честно. По сути, это кража чужого труда."],
+["Плагиатор вредит себе.","Он ничему не учится, и на экзамене или на работе это всплывёт. Списанное ИИ-сочинение не научит писать."],
+["Общество это наказывает.","Людей лишают учёных степеней за списанные диссертации, а спортсменов — титулов за обман. Значит, это общепризнанно нечестно."]],
+c:[["Граница размыта.","Любая работа опирается на чужие идеи. Ньютон говорил, что видел дальше, потому что стоял «на плечах гигантов». Где «вдохновился», а где «украл»?"],
+["Бывает договорённость.","Спичрайтеры пишут речи политикам, авторы-«призраки» — книги звёздам. Автор согласен, все об этом знают, обмана нет."],
+["В команде результат общий.","Капитан выступает от имени всех, руководитель — от имени лаборатории. Это не присвоение, а представительство."]],
+qp:"«Если бы ваш проект сдали под чужим именем и получили „5“, вы бы назвали это честным?»",
+qc:"«Политик, который читает речь спичрайтера, — обманщик?»"},
+
+{n:10,t:"В моральном выборе важнее последствия, чем намерения",l:"itog",
+k:"Классический спор. Последствия — что на самом деле случилось с людьми. Намерения — что человек хотел сделать.",
+p:[["Пострадавшему важен результат.","Ему не легче оттого, что водитель «не хотел»."],
+["Намерения не проверишь, последствия видны.","Общество и суд оценивают по делам."],
+["Хотеть хорошего мало.","В басне Крылова «Пустынник и медведь» медведь хотел отогнать муху и убил друга камнем. Отсюда «медвежья услуга». Думать о последствиях — моральная обязанность."]],
+c:[["Последствия часто непредсказуемы.","Врач честно сделал всё, но пациент умер. Разве он плохой человек?"],
+["Так можно оправдать что угодно.","«Обману, предам, зато результат хороший». Это прямой путь к «цель оправдывает средства»."],
+["Даже закон учитывает намерение.","Умышленное преступление наказывают строже, чем совершённое по неосторожности."]],
+qp:"«Медведь из басни хотел помочь другу. Его поступок морален?»",
+qc:"«Если результат хороший, а человек хотел навредить, он хороший человек?»"},
+
+{n:11,t:"Справедливость важнее равенства",l:"spravedl",
+k:"Равенство — всем поровну. Справедливость — каждому по заслугам или по потребностям. Удобная картинка: дети разного роста смотрят матч из-за забора, и каждому дали по одинаковому ящику.",
+p:[["Поровну не значит честно.","Если всем дать по одному ящику, самый маленький всё равно ничего не увидит. Справедливость учитывает разницу между людьми."],
+["Одинаковая награда убивает старание.","Если всем ставить одинаковые оценки, никто не будет стараться. Справедливо, когда награда зависит от вклада."],
+["Общество само выбирает справедливость.","Пандусы для инвалидов, льготы многодетным — это неравенство ради справедливости, и почти все его поддерживают."]],
+c:[["Справедливость каждый понимает по-своему.","Равенство понятно всем. А кто решает, кому сколько «положено»? Отсюда споры и злоупотребления."],
+["Равенство перед законом — основа.","Богатый и бедный должны отвечать одинаково. Начнут судить «по заслугам» — и богатым будет мягче."],
+["Без равного старта нет справедливости.","Сначала нужны равные возможности, и только потом можно честно делить «по заслугам»."]],
+qp:"«Справедливо ли давать одинаковое лекарство здоровому и больному?»",
+qc:"«Кто решает, что справедливо? А если он ошибётся в свою пользу?»"},
+
+{n:12,t:"Цель оправдывает средства",l:"itog",
+k:"Фразу часто приписывают Макиавелли. Спор: можно ли идти к хорошей цели плохими путями. ЗА говорит «иногда да, если цель велика, а средство — меньшее зло». ПРОТИВ: плохие средства портят саму цель.",
+p:[["Хирург режет, чтобы спасти.","Средство болезненное, но цель его оправдывает."],
+["Шиндлер давал взятки и обманывал.","Так он спас сотни людей от гибели, и мы считаем его героем."],
+["Нарушить правило ради жизни можно.","Скорая помощь едет на красный свет, чтобы успеть к больному. Правило уступает, когда цель — спасти человека."]],
+c:[["Плохие средства меняют цель.","Велогонщик Лэнс Армстронг выиграл семь «Тур де Франс» с допингом. Его лишили всех титулов, победы обесценились."],
+["Этой фразой оправдывали самые страшные преступления.","«Ради светлого будущего» в истории совершали ужасные вещи."],
+["Любой назовёт свою цель благой.","Кто это проверит? Вор тоже говорит, что кормит семью."]],
+qp:"«Хирург разрезает человека — это зло? Или цель оправдывает средство?»",
+qc:"«Можно украсть у одного, чтобы помочь другому? А если украдут у вас?»"},
+
+{n:13,t:"Талантливые люди заслуживают больше, чем неталантливые",l:"trud",
+k:"Уточните: больше чего — денег, уважения, возможностей? И за что: за дар или за результат?",
+p:[["Талант приносит больше пользы.","Изобретатель, хирург, учёный. Справедливо, когда больший вклад вознаграждается больше."],
+["Иначе таланты уйдут.","Без поддержки одарённый бросит дело или уедет. Поэтому есть школы и центры для одарённых детей, например «Сириус»."],
+["Мы награждаем результат.","Талант — это ещё и годы работы над ним. Результат у талантливых выше."]],
+c:[["Талант — подарок природы.","Человек его не заработал. Награждать за дар — всё равно что награждать за рост или цвет глаз."],
+["Заслуживает тот, кто трудится.","Неталантливый, который работает вдвое больше, достоин уважения не меньше."],
+["Достоинство у всех одинаковое.","Право на уважение, лечение и образование не зависит от таланта."]],
+qp:"«Хирург, спасший тысячи жизней, должен получать столько же, сколько новичок?»",
+qc:"«Человек виноват, что родился без музыкального слуха?»"},
+
+{n:14,t:"Раскаяние должно смягчать наказание",l:"spravedl",
+k:"Раскаяние — искреннее признание вины и желание исправить вред. Закон это учитывает: явка с повинной и возмещение ущерба — смягчающие обстоятельства (ст. 61 УК РФ).",
+p:[["Наказание нужно, чтобы исправить.","Если человек уже раскаялся, цель отчасти достигнута."],
+["Так устроен закон.","Явка с повинной, помощь следствию, возмещение ущерба смягчают приговор."],
+["Смягчение мотивирует признаваться.","Если раскаяние ничего не меняет, зачем говорить правду и возмещать вред?"]],
+c:[["Раскаяние легко сыграть.","Преступник может «раскаиваться» ради меньшего срока. Проверить искренность невозможно."],
+["Пострадавшему не легче.","Вред уже причинён. Справедливость — отвечать за поступок."],
+["Получается «натвори и извинись».","Если извинение смягчает наказание, кажется, что можно сделать зло и легко отделаться."]],
+qp:"«Кто скорее исправится: тот, кто раскаялся, или тот, кто ничего не понял?»",
+qc:"«Как суд отличит искреннее раскаяние от хорошей игры?»"},
+
+{n:15,t:"Мораль выше закона",l:"spravedl",
+k:"Мораль — представления о добре и зле, совесть. Закон — правила, установленные государством. Спор: что делать, когда они расходятся.",
+p:[["Законы бывают несправедливы.","Нацистские законы были законами, но Шиндлер и Ирена Сендлер (она спасла около 2500 детей) правильно сделали, что их нарушили."],
+["«Я выполнял приказ» — не оправдание.","На Нюрнбергском процессе это решили для всего мира: человек отвечает перед совестью."],
+["Мораль меняет законы.","Крепостное право и рабство отменили, потому что люди поняли: это неправильно."]],
+c:[["Мораль у каждого своя.","Закон один для всех. Если каждый поставит свою мораль выше закона, начнётся хаос."],
+["Закон защищает от самосуда.","Толпа, которая расправляется с человеком, тоже уверена, что поступает морально."],
+["Сократ не стал бежать из тюрьмы.","Его осудили несправедливо, а друзья приготовили побег. Он отказался: нельзя разрушать законы города, даже когда они против тебя."]],
+qp:"«Если закон велит выдать невиновного, вы выдадите?»",
+qc:"«Если каждый будет нарушать закон, который считает аморальным, что от закона останется?»"},
+
+{n:16,t:"В моральном выборе важнее последствия, чем намерения",l:"itog",dup:10},
+
+{n:17,t:"Справедливость важнее милосердия",l:"spravedl",
+k:"Справедливость — каждому по делам. Милосердие — пощадить или помочь больше, чем «положено».",
+p:[["Милосердие к виновному несправедливо к жертвам.","Если преступника отпустили из жалости, страдают те, кого он обидел, и те, кого обидит потом."],
+["Справедливость — основа доверия.","Если кому-то ставят оценку «из жалости», остальные перестают стараться."],
+["Мягкость к виновному не работает.","В басне Крылова «Кот и Повар» повар долго читал коту мораль, а «Васька слушает да ест». Где нужно наказание, уговоры бессильны."]],
+c:[["Справедливость без милосердия — жестокость.","Пугачёв пощадил Гринёва, императрица помиловала его. Милосердие спасло невиновного там, где «справедливость» ошиблась."],
+["Людей меняет милосердие.","Учитель дал второй шанс ученику, который провалил контрольную, и тот впервые взялся за учёбу всерьёз. Строгость могла бы его сломать."],
+["Суд ошибается.","Милосердие — страховка от ошибок «справедливости»."]],
+qp:"«Судья пожалел и отпустил преступника, а тот снова совершил преступление. Кто виноват?»",
+qc:"«Вы хотели бы, чтобы за каждую ошибку с вами поступали строго „по справедливости“?»"},
+
+{n:18,t:"Нельзя оправдать предательство",l:"proshch",
+k:"Предательство — нарушение верности тем, кто тебе доверял. ПРОТИВ ищет случаи, когда «предать» плохих — правильно. Слово «нельзя» — абсолют.",
+p:[["Предательство разрушает доверие.","На доверии держатся команда, семья, страна. Игроку, который однажды «слил» матч, команда больше не верит."],
+["Литература показывает предателей презренными.","Швабрин в «Капитанской дочке» ради спасения своей жизни перешёл к Пугачёву, и Пушкин делает его самым низким героем повести."],
+["Стоит оправдать одного, оправдаются все.","Каждый предатель найдёт «уважительную причину». Если принять одну, придётся принимать все, и доверять станет некому."]],
+c:[["Важно, кого предают.","Если твоя компания творит зло, уйти и рассказать правду — честность, а не предательство. Тот, кто рассказал учителю о травле, «предал» обидчиков?"],
+["Верность злу — не добродетель.","Ирена Сендлер нарушала приказы властей, чтобы спасать детей из гетто."],
+["Иногда нарушить обещание — правильно.","Если друг признался, что собирается кому-то навредить, промолчать — значит стать соучастником."]],
+qp:"«Вы снова доверитесь человеку, который однажды „оправданно“ вас предал?»",
+qc:"«Друг сказал, что собирается избить одноклассника. Рассказать взрослым — это предательство?»"},
+
+{n:19,t:"Честность всегда важнее выгоды",l:"dengi",
+k:"Главное слово — «всегда». ПРОТИВ достаточно найти сильное исключение. ЗА объясняет, что честность выгоднее в долгую.",
+p:[["Выгода — на сегодня, честность — на всю жизнь.","Лэнс Армстронг побеждал нечестно и потерял все семь титулов и репутацию."],
+["Честность и есть главная выгода.","С честным хотят работать, дружить, заключать сделки."],
+["«Береги честь смолоду».","Наставление отца Гринёву в «Капитанской дочке». Если ставить выгоду выше честности, тебя можно купить."]],
+c:[["«Всегда» не выдерживает проверки.","Если выгода — это жизнь человека, честность перестаёт быть главной. Шиндлер и Сендлер лгали ради спасения людей."],
+["Не раскрывать всё — нормально.","Тренер не рассказывает сопернику свою тактику, продавец не обязан называть себестоимость. Это не подлость."],
+["Выгода бывает не личной.","Выгода семьи, команды, страны. Разведчик скрывает правду ради своей страны."]],
+qp:"«Вы бы стали работать с человеком, который продаст вас ради выгоды?»",
+qc:"«Разведчик скрывает правду ради страны. Он поступает аморально?»"},
+
+{n:20,t:"Настоящая доброта не требует награды",l:"dobro",
+k:"«Не требует» — человек делает добро не ради благодарности. ПРОТИВ: желание ответа и награды не делает доброту ненастоящей.",
+p:[["Добро ради награды — это сделка.","В басне Крылова «Листы и Корни» листья хвастаются красотой, а корни незаметно кормят всё дерево и не просят похвалы. Настоящая доброта похожа на корни."],
+["Доброта видна, когда никто не смотрит.","Анонимные доноры и анонимные пожертвования — настоящая доброта. Добро ради лайков исчезает, когда выключают камеру."],
+["Награда — само чувство, что помог.","Донор, сдавший кровь анонимно, никогда не узнает, кого спас, но всё равно чувствует, что сделал важное."]],
+c:[["Хотеть благодарности — нормально.","Человек не робот. Волонтёров награждают, и это помогает им продолжать."],
+["Награда учит других.","Когда героев награждают, больше людей решаются помогать. Обществу полезно поощрять доброту."],
+["Добро всегда возвращается.","Пугачёв помнил заячий тулуп, который ему подарил Гринёв, и за это спас ему жизнь. Взаимность не делает доброту ненастоящей."]],
+qp:"«Если человек помогает только на камеру, его доброта настоящая?»",
+qc:"«Волонтёр получил грамоту и обрадовался. Его доброта стала „ненастоящей“?»"},
+
+{n:21,t:"Зависть разрушает человека",l:"dobro",
+k:"Различайте «чёрную» зависть (хочу, чтобы у другого не было) и «белую» (хочу так же и стараюсь). ПРОТИВ держится за «белую».",
+p:[["Зависть толкает на подлость.","Из зависти распускают слухи и травят тех, у кого получается лучше. В «Сказке о мёртвой царевне» Пушкина царица-мачеха из зависти к красоте падчерицы решила её погубить."],
+["Завистник не радуется своему.","Он всё время сравнивает себя с другими и несчастлив. Соцсети, где все показывают лучшее, делают это сравнение бесконечным."],
+["Это одна из древнейших историй.","Каин убил Авеля из зависти."]],
+c:[["«Белая» зависть двигает вперёд.","Видишь чужой успех и хочешь того же. Так растут спортсмены и учёные."],
+["Разрушает не чувство, а поступок.","Если зависть заставляет тренироваться, она полезна."],
+["Зависть подсказывает, чего ты хочешь.","Это сигнал, по которому можно понять свои цели."]],
+qp:"«Вам хоть раз стало лучше от зависти?»",
+qc:"«Вы увидели успех друга и стали тренироваться больше. Это разрушение?»"},
+
+{n:22,t:"Милосердие делает мир лучше",l:"dobro",
+k:"Милосердие — готовность помочь или простить из сострадания. ПРОТИВ лучше спорить не с милосердием вообще, а с тем, что оно всегда делает мир лучше.",
+p:[["Сёстры милосердия спасли тысячи людей.","В Крымскую войну хирург Николай Пирогов организовал помощь сестёр милосердия, первой среди которых была Даша Севастопольская. Раненых стали выхаживать."],
+["Добро возвращается добром.","Гринёв подарил бродяге заячий тулуп. Бродягой оказался Пугачёв, который запомнил это и потом спас Гринёву жизнь."],
+["Одно милосердие спасает двоих.","Люди, которые забрали собаку из приюта, часто говорят, что спасли не только её, но и себя: в жизни появились забота и смысл."]],
+c:[["Неразумное милосердие вредит.","Хулигана пожалели и не наказали, и он обидел следующего."],
+["Милосердие к одному бывает несправедливостью к другим.","Если слабого взяли в команду из жалости, обидно тем, кто тренировался."],
+["Мир меняют не только чувства.","Законы, наука, работа. Милосердие без них — капля в море."]],
+qp:"«Кому стало хуже оттого, что врачи лечат даже раненых врагов?»",
+qc:"«Хулигана из жалости отпустили, и он снова обидел слабого. Мир стал лучше?»"},
+
+{n:23,t:"Умение просить прощения — признак внутренней зрелости",l:"proshch",
+k:"Зрелость — способность отвечать за свои поступки. ПРОТИВ: слова извинения сами по себе ничего не доказывают.",
+p:[["Признать ошибку трудно.","Мешает гордость. Ребёнок спорит до последнего, а взрослый может сказать «я был неправ»."],
+["Извинение — это ответственность.","Зрелый человек отвечает за свои поступки, а не ищет виноватых."],
+["Извинение чинит отношения.","Капитан, который признаёт свою ошибку, сплачивает команду, а не теряет авторитет."]],
+c:[["Извиниться легко, исправить трудно.","Многие говорят «прости» по привычке и делают то же самое снова. Слова — ещё не зрелость."],
+["Извиняются и из страха.","Чтобы отстали, чтобы не наказали. Это желание избежать проблем, а не зрелость."],
+["Зрелый не извиняется за правду.","Если ты сказал правду и защитил слабого, извиняться перед обидчиком ради спокойствия — слабость, а не зрелость."]],
+qp:"«Кому легче сказать „я был неправ“: пятилетнему или взрослому? Почему?»",
+qc:"«Человек каждый день извиняется и каждый день делает то же самое. Он зрелый?»"},
+
+{n:24,t:"Сострадание делает общество сильнее",l:"dobro",
+k:"Сострадание — умение чувствовать чужую боль и желание помочь. «Сильнее» — устойчивее в кризисах, сплочённее, увереннее.",
+p:[["Общество, где помогают, переживает беды вместе.","В пандемию тысячи волонтёров развозили продукты и лекарства пожилым людям, и это помогло многим выжить."],
+["Сострадание — это доверие.","Человек знает, что ему помогут, и не боится рисковать, учиться, растить детей."],
+["Без сострадания каждый остаётся один.","«Эффект свидетеля»: когда никто не чувствует ответственности, человек остаётся с бедой один на один."]],
+c:[["Общество держится на законах, экономике и обороне.","Сострадание без системы ничего не построит."],
+["Сострадание бывает избирательным.","Жалеют тех, кого показали по телевизору, а не тех, кому нужнее всего. Решения нужно принимать разумом."],
+["Можно воспитать иждивенцев.","Если помогать всем без разбора, часть людей перестанет стараться сама."]],
+qp:"«В каком классе спокойнее: где за слабого заступаются или где каждый сам за себя?»",
+qc:"«Можно ли построить больницу на одном сострадании, без денег и законов?»"},
+
+{n:25,t:"Быть справедливым труднее, чем быть добрым",l:"spravedl",
+k:"Сравниваем, что требует больше усилий. Сравнительные темы удобно доказывать через пример «что сложнее сделать».",
+p:[["Доброта нравится всем, справедливость кого-то огорчает.","Судья, учитель, капитан должны решать честно, даже если кто-то обидится."],
+["Справедливость требует разбираться.","Надо выслушать обе стороны, не поддаться симпатиям. Доброте хватает желания помочь."],
+["Справедливым трудно быть к своим.","Поставить другу заслуженную «двойку» или не взять его в команду, потому что он играет слабее, гораздо тяжелее, чем угостить его."]],
+c:[["Доброта требует отдать своё.","Время, деньги, силы. Справедливость можно соблюдать по правилам."],
+["Добро тому, кто тебя обидел, — самое трудное.","Справедливость даёт «по заслугам», доброта — больше, чем заслужено."],
+["Добрых людей меньше, чем «справедливых».","Честно соблюдать правила умеет почти каждый, а отдавать своё время и силы просто так — единицы."]],
+qp:"«Что тяжелее: угостить друга или поставить ему заслуженную двойку?»",
+qc:"«Кого вы реже встречали: справедливых людей или по-настоящему добрых?»"},
+
+{n:26,t:"Моральный выбор человека определяет его личность",l:"harakter",
+k:"Личность — каким человек является на самом деле. Спор о том, создают её выборы или что-то ещё: воспитание, среда, природа.",
+p:[["Человека видно в трудный момент.","Гринёв и Швабрин попали в одну ситуацию, выбрали по-разному и стали противоположностями."],
+["Личность — это не таланты.","Талантливый подлец остаётся подлецом. Определяет то, что человек выбирает."],
+["Выборы становятся характером.","Один раз соврал — второй раз легче. Из маленьких выборов складывается личность."]],
+c:[["Личность строят и воспитание, и среда.","Один выбор в стрессе может быть случайностью, а не сутью человека."],
+["Человек меняется.","Хулиган из младших классов может вырасти отличным человеком. Если судить по одному выбору, мы ставим клеймо за одну ошибку."],
+["Выбор часто диктуют обстоятельства.","Страх, голод, угроза. Это говорит о ситуации, а не о личности."]],
+qp:"«Как ещё узнать, какой человек, если не по его поступкам?»",
+qc:"«Человек однажды испугался и солгал. Он теперь навсегда лжец?»"},
+
+{n:27,t:"Каждый человек способен на милосердие",l:"dobro",
+k:"«Каждый» — абсолют. ЗА говорит о способности, а не о том, что все милосердны. ПРОТИВ ищет исключения.",
+p:[["Даже жестокие бывают милосердны.","Пугачёв, бунтовщик и разбойник, пощадил Гринёва."],
+["Сочувствие заложено в человеке.","Психологи (Варнекен и Томаселло) показали, что даже полуторагодовалые дети сами помогают взрослому, у которого что-то не получается."],
+["Иначе бессмысленно воспитывать.","Если не верить, что каждый способен на добро, зачем исправлять и учить людей?"]],
+c:[["«Каждый» — слишком сильно.","Есть люди с нарушенной способностью сочувствовать, есть те, кто сознательно выбирает жестокость."],
+["Среда может эту способность убить.","Человек, выросший в жестокости, часто её не проявляет."],
+["Способность есть, а поступка нет.","Многие проходят мимо человека, которому плохо на улице, не потому что злые, а потому что спешат или боятся."]],
+qp:"«Назовите хоть одного человека, который ни разу никого не пожалел»",
+qc:"«Если каждый способен на милосердие, откуда тогда жестокие преступления?»"},
+
+{n:28,t:"Моральный выбор важнее личной выгоды",l:"dengi",
+k:"Близко к теме 19, но без слова «всегда». ПРОТИВ защищает право заботиться о себе и своих.",
+p:[["Выгода проходит, совесть остаётся.","Швабрин спас свою жизнь предательством, но остался презренным человеком."],
+["Если все выбирают выгоду, общество разваливается.","Никто никому не верит, каждый ждёт подвоха."],
+["Уважают тех, кто выбрал совесть.","Гринёв, Сократ. Их помнят веками, а выгоду их противников никто не помнит."]],
+c:[["Своя выгода — тоже нормально.","Заботиться о себе морально, если не вредишь другим."],
+["Часто это выгода семьи.","Родитель выбрал работу повыгоднее, чтобы прокормить детей. Он аморален?"],
+["Выгода двигает прогресс.","Бизнес, изобретения, наука часто рождаются из желания заработать и приносят пользу всем."]],
+qp:"«Вы бы продали друга за деньги?»",
+qc:"«Человек выбрал работу повыгоднее, чтобы прокормить семью. Это аморально?»"},
+
+{n:29,t:"Человек обязан помогать другим, даже в ущерб себе",l:"dolg",
+k:"Два трудных слова: «обязан» и «в ущерб себе». ЗА выгоднее говорить о моральном долге. ПРОТИВ давит на «обязан».",
+p:[["Самое важное делается в ущерб себе.","Врачи в эпидемию, пожарные, солдаты. Без этого общество не выживет."],
+["Таких людей считают героями.","Капитан Миронов в «Капитанской дочке» не сдал крепость и погиб. Врачи в пандемию работали сутками, рискуя заразиться."],
+["Беда приходит не вовремя.","Если помогать только когда удобно, помощь окажется ненужной."]],
+c:[["Жертву нельзя требовать.","Подвиг — выбор, а не обязанность. Нельзя обязать человека вредить себе."],
+["Навредишь себе — не поможешь никому.","Спасателей первым делом учат думать о своей безопасности. В самолёте маску сначала надевают на себя."],
+["Есть долг перед своими.","Нельзя отдать всё чужим и оставить без помощи собственных детей."]],
+qp:"«Если все будут помогать только без ущерба для себя, кто будет тушить пожары?»",
+qc:"«Почему спасателей учат сначала думать о своей безопасности?»"},
+
+{n:30,t:"Жалость — это проявление добра",l:"dobro",
+k:"Отделите жалость от сострадания. Жалость может унижать: «бедненький» звучит как взгляд сверху вниз.",
+p:[["С жалости начинается помощь.","Сначала пожалел, потом помог. Без этого первого чувства помощи не будет."],
+["Жалость меняет людей.","Кто однажды пожалел бездомного котёнка и забрал домой, потом по-другому смотрит на всех бездомных животных."],
+["Жалость спасала жизни.","Пугачёв пожалел Гринёва и не казнил его. Савельич бросился Пугачёву в ноги и просил повесить его вместо барина."]],
+c:[["Жалость часто унижает.","Люди с инвалидностью часто говорят, что хотят уважения, а не жалости."],
+["Жалость мешает расти.","Из жалости не говорят правду, завышают оценку, и человек не меняется."],
+["Жалость — чувство, добро — поступок.","Можно пожалеть и пройти мимо. Добро начинается с действия."]],
+qp:"«Можно ли помочь человеку, ни капли его не пожалев?»",
+qc:"«Вам понравилось бы, если бы вас всё время жалели?»"},
+
+{n:31,t:"Человек становится лучше только через трудный нравственный выбор",l:"harakter",
+k:"Слово «только» — абсолют. ПРОТИВ достаточно показать другие пути. ЗА должен доказать, что без испытания рост не настоящий.",
+p:[["Пока выбор лёгкий, неизвестно, какой ты.","Трудный выбор — испытание, после которого растёшь. Гринёв из недоросля стал мужчиной именно в испытаниях."],
+["Перелом происходит в трудный момент.","Спортсмены часто говорят, что их изменили не победы, а тяжёлые поражения и травмы, после которых нужно было решить: бросить или продолжать."],
+["Характер растёт как мышцы.","Мышцы растут от нагрузки, характер — от трудностей."]],
+c:[["«Только» — неправда.","Человек становится лучше благодаря любви, книгам, примеру родителей и учителей."],
+["Трудный выбор может сломать.","Швабрин в «Капитанской дочке» выбирал между присягой и жизнью, выбрал жизнь и стал предателем. Испытание его не улучшило, а сломало."],
+["Добро растёт из мелочей.","Привычка делать маленькие добрые дела каждый день меняет человека без всякой драмы."]],
+qp:"«Как проверить характер, если не трудной ситуацией?»",
+qc:"«Человек вырос в любящей семье и прочитал много книг. Он не стал от этого лучше?»"},
+
+{n:32,t:"Каждый человек обязан защищать слабых",l:"dolg",
+k:"«Каждый» и «обязан». ЗА уточняет, что «защищать» — это не только драться: позвать взрослых, заступиться словом. ПРОТИВ давит на «посильность».",
+p:[["Однажды слабым будешь ты.","Старость, болезнь, беда. Если слабых не защищают, побеждает сильный."],
+["Травля прекращается, когда кто-то заступается.","Канадские психологи наблюдали за школьниками и заметили: когда кто-то из ребят вступался, больше чем в половине случаев травля прекращалась за несколько секунд."],
+["Это часть нашей культуры.","«Сам погибай, а товарища выручай», — учил солдат Суворов."]],
+c:[["Обязанность должна быть посильной.","Девятиклассник не обязан бросаться на вооружённого преступника."],
+["Защищать — дело специально обученных людей.","Полиция, учителя, закон. Если каждый «защищает» по-своему, начинается самосуд."],
+["Обязанность — не быть равнодушным.","Достаточно позвать на помощь. Требовать большего — значит требовать героизма."]],
+qp:"«На ваших глазах обижают младшего, а вы промолчали. Это нормально?»",
+qc:"«Девятиклассник обязан драться с взрослым грабителем?»"},
+
+{n:33,t:"Человек обязан держать слово",l:"dolg",
+k:"Слово — обещание, клятва, присяга. ПРОТИВ ищет случаи, когда выполнять обещание — зло или глупость.",
+p:[["Без верности слову нет доверия.","Ни дружбы, ни дела, ни государства. Купеческое слово было крепче договора."],
+["Верность слову уважают всегда.","Гринёв не нарушил присягу даже под виселицей. Капитан Миронов отказался присягать Пугачёву и погиб, но остался верен слову."],
+["Регул вернулся на казнь.","Римский полководец Марк Регул дал карфагенянам слово вернуться в плен и вернулся, хотя знал, что его казнят."]],
+c:[["Обещание плохого держать нельзя.","Слово не может быть выше морали."],
+["Обстоятельства меняются.","Обещал прийти на день рождения, а заболела мама. Держать слово любой ценой глупо."],
+["Слово, данное сгоряча, можно пересмотреть.","Пообещал друзьям прыгнуть с крыши гаража и понял, что это опасно? Держать такое слово глупо. Верность слову не выше здравого смысла."]],
+qp:"«Вы стали бы дружить с человеком, который не выполняет обещаний?»",
+qc:"«Вы пообещали другу молчать, а он задумал опасное. Будете молчать?»"},
+
+{n:34,t:"Быть добрым труднее, чем казаться добрым",l:"dobro",
+k:"Сравнительная тема. «Казаться» — показывать доброту словами и видом. «Быть» — делать добро на деле.",
+p:[["Казаться легко.","Хватит слов и фото в соцсетях. Быть добрым — значит отдавать время, силы и деньги, когда никто не видит."],
+["Казаться можно одними словами.","В басне Крылова «Слон и Моська» Моська лает на слона, чтобы все думали, что она сильная. Лаять легко, а быть сильным — нет. Так и с добротой."],
+["Доброту проверяет неудобство.","Помочь, когда неудобно и без награды, — вот настоящая проверка (см. тему 20)."]],
+c:[["Притворяться тоже трудно.","Нужно всё время следить за собой и бояться разоблачения. Лицемер живёт в постоянном напряжении."],
+["Доброму быть добрым естественно.","А изображать то, чего в тебе нет, намного сложнее."],
+["Маска рано или поздно падает.","Годами держать образ тяжелее, чем просто быть собой."]],
+qp:"«Что проще: выложить пост „помогите бездомным животным“ или каждую неделю ездить в приют?»",
+qc:"«Сколько сил нужно, чтобы годами притворяться не тем, кто ты есть?»"},
+
+{n:35,t:"Равнодушие — одна из самых опасных форм зла",l:"dobro",
+k:"Обратите внимание на слова «одна из». ЗА не обязан доказывать, что равнодушие опаснее всего. Равнодушие — безразличие к чужой беде.",
+p:[["Зло побеждает, когда хорошие люди молчат.","Писателю Бруно Ясенскому принадлежит мысль: бойтесь равнодушных, это с их молчаливого согласия совершаются предательства и убийства."],
+["Равнодушие убивает тихо.","Человеку стало плохо на улице, мимо прошли десятки людей, и помощь опоздала. Злодеев тут нет, есть только равнодушные."],
+["Травля держится на зрителях.","Обижают не только «главные»: обижают все, кто смеётся, снимает на телефон или молчит. «Эффект свидетеля»: в толпе каждый ждёт, что поможет другой."]],
+c:[["Активное зло опаснее.","Убийца, вор, агрессор приносят вред напрямую. Равнодушный хотя бы не нападает."],
+["Нельзя сочувствовать всем бедам мира.","Человек просто сгорит. Иногда «равнодушие» защищает психику."],
+["Бездействие и действие — разные вещи.","Обычно мы судим за поступки, а не за то, чего человек не сделал."]],
+qp:"«Кто виноват в травле: только тот, кто бьёт, или и те, кто снимает на телефон?»",
+qc:"«Что опаснее: человек, который прошёл мимо, или человек, который ударил?»"},
+
+{n:36,t:"Честность важнее последствий",l:"pravda",
+k:"Сочетание тем 1 и 10. Говорить ли правду, даже если от неё будет плохо?",
+p:[["Если правда зависит от последствий, её всегда можно отменить.","Тогда ложь становится нормой: всегда найдётся «причина»."],
+["Честность приносит лучшие последствия в долгую.","После аварии на Чернобыльской АЭС власти сначала скрывали правду, жителей Припяти эвакуировали только через сутки с лишним. Сокрытие сделало беду страшнее."],
+["Честность вызывает уважение.","Гринёв сказал Пугачёву правду, рискуя жизнью, и завоевал его уважение."]],
+c:[["Последствия — это живые люди.","Если правда приведёт к чьей-то гибели (например, выдать прячущегося человека), честность становится соучастием."],
+["Пример Канта показывает тупик.","Философ Кант считал, что нельзя солгать даже убийце, который ищет твоего друга. Большинству людей это кажется бесчеловечным."],
+["Честность — средство, а не цель.","Она нужна для доверия и справедливости. Если она вредит им, она теряет смысл."]],
+qp:"«Если правду можно скрыть „из-за последствий“, кто решает, когда?»",
+qc:"«Преступник спрашивает, где прячется ваш друг. Вы скажете правду?»"},
+
+{n:37,t:"Хороший лидер всегда честен со своей командой",l:"harakter",
+k:"Слово «всегда». Различайте «лгать» и «не говорить всего». ПРОТИВ: у лидера бывают тайны и моменты, когда правда вызовет панику.",
+p:[["Команда идёт за тем, кому верит.","Одна раскрытая ложь, и авторитета больше нет."],
+["Суворов был честен с солдатами.","Он делил с ними все тяготы, прямо говорил, что их ждёт, и армия прошла за ним через Альпы."],
+["Без правды команда не может помочь.","Если капитан скрывает проблему, никто не может её решить вместе с ним."]],
+c:[["Есть тайны, которые лидер обязан хранить.","Военные планы, секреты компании, личные проблемы участников."],
+["Правда в моменте может вызвать панику.","На «Титанике» шлюпок не хватало на всех. Капитан тонущего корабля не кричит «мы все погибнем», он организует спасение."],
+["Лидер поддерживает дух.","Перед финалом тренер не говорит «шансов у нас мало». Это не ложь, а забота о команде."]],
+qp:"«Вы пойдёте за капитаном, если узнаете, что он вас обманывал?»",
+qc:"«Капитан тонущего корабля должен объявить, что шлюпок на всех не хватит?»"},
+
+{n:38,t:"Не каждый поступок можно простить",l:"proshch",
+k:"Тема «не каждый» — здесь ЗА хватит одного сильного примера. ПРОТИВ должен доказать, что простить можно всё, и лучше разделить «простить» и «отменить наказание».",
+p:[["Есть то, что нельзя исправить.","Убийство, предательство Родины, военные преступления. Для военных преступлений по международному праву даже нет срока давности."],
+["Если простить всё, исчезает граница добра и зла.","Значит, можно делать что угодно."],
+["Простить может только пострадавший.","Если он погиб, никто не вправе прощать за него."]],
+c:[["Простить — не значит отменить наказание.","Можно простить и всё равно требовать справедливого суда."],
+["Прощение нужно самому человеку.","Чтобы не жить с ненавистью. Мандела простил тюремщиков."],
+["Человек может измениться даже после страшного.","Есть люди, которые отсидели в тюрьме, а потом всю жизнь помогали трудным подросткам. Сказать «непростимо» — значит отказать человеку в изменении."]],
+qp:"«Можно ли простить того, кто не раскаялся и готов повторить?»",
+qc:"«Простить — значит отменить наказание? Или это разные вещи?»"},
+
+{n:39,t:"Нравственный поступок требует смелости",l:"harakter",
+k:"Нравственный поступок — поступок по совести. Спор о том, всегда ли для него нужна смелость или бывает и обычное, лёгкое добро.",
+p:[["Правильный поступок часто идёт против толпы.","Заступиться за новенького, которого травит весь класс, страшно: можешь сам стать изгоем. Поэтому заступаются единицы."],
+["Правда стоит риска.","Сказать правду, признать ошибку, отказаться списывать — значит рискнуть отношениями, оценкой, репутацией."],
+["Все нравственные герои рисковали.","Гринёв, капитан Миронов, Сократ ставили под удар свою жизнь."]],
+c:[["Многие добрые дела — обычные.","Уступить место, помочь с уроками, вернуть найденный кошелёк. Смелость тут не нужна."],
+["Для доброго человека это привычка.","Он не преодолевает страх, он просто так живёт."],
+["Смелость сама по себе не нравственна.","Смелыми бывают и преступники. Нравственный поступок требует прежде всего совести."]],
+qp:"«Если смелость не нужна, почему за того, кого травят, обычно заступается один человек из всего класса?»",
+qc:"«Чтобы уступить место бабушке в автобусе, нужна смелость?»"},
+
+{n:40,t:"Мораль лидера важнее его профессиональных качеств",l:"harakter",
+k:"Мораль — честность, справедливость, забота о людях. Профессиональные качества — знания, опыт, умение принимать решения.",
+p:[["Умение усиливает и добро, и зло.","Умный, но бесчестный лидер приведёт команду к беде тем быстрее, чем он умнее."],
+["Умениям можно научить, совести — почти нет.","Команда идёт за человеком, которому верит, а навыкам он научится."],
+["Лидер — пример.","Если капитан хитрит, вся команда начинает хитрить."]],
+c:[["Пассажирам важно, что пилот умеет летать.","Хирург, капитан корабля, полководец — прежде всего профессионалы."],
+["Добрый, но неумелый лидер — тоже беда.","Решения из лучших намерений с плохим результатом (см. тему 10)."],
+["Нельзя ставить одно выше другого.","Хороший лидер — это сочетание. Без умений мораль ничего не изменит."]],
+qp:"«Вы пошли бы за гениальным капитаном, который продаст команду при первой возможности?»",
+qc:"«Вы сядете в самолёт к очень честному пилоту, который не умеет летать?»"}
+];
+
+var EX = [
+ {g:"«Капитанская дочка», Пушкин",items:[
+  ["Гринёв не лжёт Пугачёву","Под угрозой смерти Гринёв прямо говорит, что присягал императрице и служить Пугачёву не будет. Пугачёв уважает его за это и отпускает.",[3,19,26,36]],
+  ["Заячий тулуп","В метель Гринёв дарит бродяге свой тулуп. Бродягой оказывается Пугачёв, который запомнил добро и позже спас Гринёву жизнь.",[20,22,27,30]],
+  ["Попадья спасает Машу","Когда в крепость входят пугачёвцы, попадья выдаёт Машу за свою больную племянницу.",[1,36]],
+  ["Капитан Миронов","Комендант отказывается присягать Пугачёву и погибает. Честный и храбрый, он не смог удержать крепость с одной старой пушкой.",[29,33,39,40]],
+  ["Швабрин","Ради спасения своей жизни переходит к Пугачёву и становится самым презираемым героем книги.",[18,26,28,31]],
+  ["Савельич","Старый слуга бросается Пугачёву в ноги и просит повесить его вместо барина.",[18,29,30]],
+  ["Сто рублей Зурину","Гринёв проиграл деньги и отдал долг, хотя Савельич уговаривал не платить.",[19,28,33]],
+  ["Самовольная поездка","Генерал отказал в помощи, и Гринёв сам уехал из Оренбурга спасать Машу. Суд счёл это изменой.",[10,15,33]],
+  ["Помилование","Маша едет к Екатерине II, рассказывает правду, и императрица милует Гринёва.",[14,17,22]],
+  ["«Береги честь смолоду»","Наставление отца Гринёву. Удобно для начала или концовки речи о чести и честности.",[19,26,28]]
+ ]},
+ {g:"Басни Крылова и сказки Пушкина",items:[
+  ["«Сказка о рыбаке и рыбке»","Старик исполнял все желания старухи, а она становилась всё жаднее. Итог — разбитое корыто.",[2,20]],
+  ["«Сказка о царе Салтане»","Салтан простил ткачиху, повариху и Бабариху, которые оклеветали царицу.",[5,23,38]],
+  ["«Сказка о мёртвой царевне»","Царица-мачеха из зависти решила погубить падчерицу.",[21]],
+  ["«Ворона и Лисица»","Лисица льстит ради сыра, Ворона верит и теряет сыр.",[3,19,28]],
+  ["«Стрекоза и Муравей»","Стрекоза пропела лето, а Муравей трудился и отказал ей в помощи зимой.",[8,29,7]],
+  ["«Квартет»","Звери пересаживались и старались, но без умения музыки не вышло.",[8,13,40]],
+  ["«Лебедь, Рак и Щука»","Все тянут воз в разные стороны, и он ни с места. Без согласия и руководства старания пропадают.",[37,40]],
+  ["«Волк и Ягнёнок»","«У сильного всегда бессильный виноват». Без закона прав сильный.",[11,15,32]],
+  ["«Кот и Повар»","Повар читает коту мораль, а «Васька слушает да ест». Уговоры там, где нужна строгость.",[5,14,17]],
+  ["«Пустынник и медведь»","Медведь хотел помочь другу и убил его. «Медвежья услуга».",[10,12,16]],
+  ["«Свинья под дубом»","Свинья подрывает корни дуба, который её кормит.",[4,28]],
+  ["«Листы и Корни»","Листья хвастаются, а корни незаметно кормят всё дерево.",[20,34]],
+  ["«Слон и Моська»","Моська лает на слона, чтобы казаться сильной.",[21,34]]
+ ]},
+ {g:"Жизнь и школа",items:[
+  ["Мальчик и «Волки!»","Ради шутки кричал «Волки!», а когда волки пришли, ему не поверили.",[1,3,36]],
+  ["Дед Мороз и сюрпризы","Родители и друзья «обманывают» ради праздника.",[1,36]],
+  ["Бабушкин свитер","Подарок не понравился, но ты говоришь «спасибо, классный».",[1,3]],
+  ["Списывание и ИИ","Сдал чужую работу или ответ нейросети как свою и ничему не научился.",[9,19]],
+  ["Групповой проект","Один делает всё, а оценку получают все. Или один «хотел как лучше» и всё испортил.",[9,10]],
+  ["Таблетка другу","Хотел помочь, дал своё лекарство, а у друга аллергия.",[10,16]],
+  ["Судья в футболе","Правила одни для всех, иначе игра теряет смысл.",[11,17,25]],
+  ["Скорая на красный","Правило уступает, когда нужно спасти жизнь.",[12,15]],
+  ["Второй шанс","Учитель разрешил переписать контрольную, проваленную из-за болезни.",[14,17,22]],
+  ["Маска в самолёте","Сначала на себя, потом на ребёнка.",[2,29]],
+  ["Заступиться за новенького","Все видят травлю, а заступается обычно один.",[32,35,39]],
+  ["Человеку плохо на улице","Пока все идут мимо, никто не помогает. Стоит одному остановиться, подходят и другие.",[6,24,27,35]]
+ ]},
+ {g:"Спорт, история, наука",items:[
+  ["Роналду и Джордан","Роналду первым приходит на тренировку. Джордана не взяли в школьную команду, а он стал легендой.",[8]],
+  ["Рост в НБА","Средний рост игроков около двух метров. Не всё решает труд.",[8,13]],
+  ["Допинг в спорте","Победу на допинге отбирают вместе с медалью.",[9,12,19]],
+  ["Чернобыль, 1986","Правду об аварии скрывали, эвакуация Припяти началась только на второй день.",[36,37]],
+  ["Кролики в Австралии","Два десятка кроликов, выпущенных для охоты в 1859 году, стали бедствием для целой страны.",[10,12,16]],
+  ["Врачи и волонтёры в пандемию","Врачи работали сутками, волонтёры носили продукты пожилым людям.",[6,22,24,29]],
+  ["Третьяков и фонды","Третьяковская галерея — подарок купца Москве. Фонд Хабенского помогает больным детям.",[4,7,20]],
+  ["«Эффект свидетеля»","Чем больше людей видят беду, тем реже кто-то помогает: каждый ждёт другого.",[6,24,35]],
+  ["Заступничество останавливает травлю","Канадские психологи заметили: если кто-то из ребят вступался, травля чаще всего прекращалась за секунды.",[32,39]],
+  ["Пугачёв в истории","В 1774 году соратники сами схватили Пугачёва и выдали властям.",[18,37,40]],
+  ["Нельсон Мандела","27 лет в тюрьме, а став президентом, выбрал примирение вместо мести.",[5,38]],
+  ["Военные преступления","По конвенции ООН 1968 года у них нет срока давности.",[38]]
+ ]},
+ {g:"Фильмы и сказки (запасные)",items:[
+  ["Человек-паук","«С большой силой приходит большая ответственность».",[29,32,33]],
+  ["«Король Лев»","Шрам предал брата ради власти. Симба вернулся и взял ответственность на себя.",[18,26,31]],
+  ["«Холодное сердце»","Ханс казался добрым, а хотел захватить трон.",[3,34]],
+  ["«Гарри Поттер»","Снейп казался злодеем, а тайно защищал Гарри. Гермиона берёт трудом. Петтигрю предал друзей.",[8,10,18,26]]
+ ]}
+];
+
+function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")}
+function byN(n){for(var i=0;i<T.length;i++){if(T[i].n===n)return T[i]}}
+function full(t){return t.dup?Object.assign({},byN(t.dup),{n:t.n,dup:t.dup}):t}
+
+/* storage */
+var done={};
+try{done=JSON.parse(localStorage.getItem("debDone")||"{}")||{}}catch(e){done={}}
+function saveDone(){try{localStorage.setItem("debDone",JSON.stringify(done))}catch(e){}}
+
+/* lines */
+(function(){
+  function side(x,cls){
+    return '<div class="'+cls+'"><span class="sl">'+esc(x.h)+'</span>'+
+      '<span class="lx-h">Аргументы</span><ol class="la">'+x.args.map(function(a){return '<li><b>'+esc(a[0])+'</b> '+esc(a[1])+'</li>'}).join("")+'</ol>'+
+      '<span class="lx-h">Примеры</span><ul class="lx">'+x.ex.map(function(e){return '<li><b>'+esc(e[0])+'.</b> '+esc(e[1])+'</li>'}).join("")+'</ul></div>';
+  }
+  var html="";
+  Object.keys(LINES).forEach(function(id){
+    var L=LINES[id], nums=T.filter(function(t){return t.l===id}).map(function(t){return t.n});
+    html+='<article class="ln"><header><h3 style="margin:0">'+esc(L.n)+'</h3><span class="nums">темы '+nums.join(", ")+'</span></header>'+
+      '<p style="margin:0">'+esc(L.s)+'</p><div class="sides">'+side(L.a,"s-pro")+side(L.b,"s-con")+'</div>'+
+      (L.note?'<p class="muted" style="margin:8px 0 0;font-size:14px">'+esc(L.note)+'</p>':'')+
+      '<p class="muted" style="margin:6px 0 0;font-size:14px">Ход в запасе: '+esc(L.ph)+'</p></article>';
+  });
+  document.getElementById("linesBox").innerHTML=html;
+})();
+
+/* topics */
+var filterLine="all", query="";
+function argList(arr){return "<ol>"+arr.map(function(a){return "<li><b>"+esc(a[0])+"</b> "+esc(a[1])+"</li>"}).join("")+"</ol>"}
+function topicHTML(t0){
+  var t=full(t0), id="d"+t.n, isDone=!!done[t.n];
+  return '<details class="tp'+(isDone?' is-done':'')+'" data-n="'+t.n+'"><summary><span class="tn">'+t.n+'</span><span class="tt">'+esc(t.t)+
+    '<small>'+esc(LINES[t.l].n)+(t.dup?' · повтор темы '+t.dup:'')+(t.n<=10?' · только 8–9 кл.':'')+'</small></span>'+
+    (t.dup?'<span></span>':'<label class="done-lbl"><input type="checkbox" id="'+id+'" '+(isDone?'checked':'')+'>готов</label>')+'</summary>'+
+    '<div class="tbody">'+(t.dup?'<div class="note blue"><p>В документе эта тема записана дважды (как №'+t.dup+'). Готовь её так же.</p></div>':'')+
+    '<div class="key"><b>Где идёт спор</b>'+esc(t.k)+'</div><div class="cols">'+
+    '<div class="col pro"><h4>ЗА · утверждаем</h4>'+argList(t.p)+'<div class="q"><b>Спроси соперников</b>'+esc(t.qp)+'</div></div>'+
+    '<div class="col con"><h4>ПРОТИВ · опровергаем</h4>'+argList(t.c)+'<div class="q"><b>Спроси соперников</b>'+esc(t.qc)+'</div></div>'+
+    '</div></div></details>';
+}
+function haystack(t0){var t=full(t0);return (t.t+" "+t.k+" "+t.p.concat(t.c).map(function(a){return a.join(" ")}).join(" ")+" "+t.qp+" "+t.qc+" "+t.n).toLowerCase()}
+var HAY={};T.forEach(function(t){HAY[t.n]=haystack(t)});
+function renderTopics(){
+  var q=query.trim().toLowerCase().replace(/ё/g,"е");
+  var list=T.filter(function(t){
+    if(filterLine!=="all"&&t.l!==filterLine)return false;
+    if(q&&HAY[t.n].replace(/ё/g,"е").indexOf(q)<0)return false;
+    return true});
+  document.getElementById("topicsBox").innerHTML=list.length?list.map(topicHTML).join(""):'<div class="empty">Ничего не нашлось. Попробуй другое слово или сбрось фильтр.</div>';
+}
+function renderProgress(){
+  var total=T.filter(function(t){return !t.dup}).length, c=0;
+  T.forEach(function(t){if(!t.dup&&done[t.n])c++});
+  document.getElementById("pText").textContent="Готово "+c+" из "+total;
+  document.getElementById("pBar").style.width=(c/total*100)+"%";
+}
+(function(){
+  var chips='<button class="chip" type="button" data-l="all" aria-pressed="true">Все темы</button>';
+  Object.keys(LINES).forEach(function(id){chips+='<button class="chip" type="button" data-l="'+id+'" aria-pressed="false">'+esc(LINES[id].n)+'</button>'});
+  var box=document.getElementById("chips");box.innerHTML=chips;
+  box.addEventListener("click",function(e){var b=e.target.closest(".chip");if(!b)return;filterLine=b.getAttribute("data-l");
+    box.querySelectorAll(".chip").forEach(function(c){c.setAttribute("aria-pressed",c===b?"true":"false")});renderTopics()});
+  document.getElementById("q").addEventListener("input",function(e){query=e.target.value;renderTopics()});
+  var tb=document.getElementById("topicsBox");
+  tb.addEventListener("click",function(e){if(e.target.closest(".done-lbl"))e.stopPropagation()},true);
+  tb.addEventListener("change",function(e){var inp=e.target;if(inp.type!=="checkbox")return;var d=inp.closest("details"),n=+d.getAttribute("data-n");
+    if(inp.checked)done[n]=1;else delete done[n];d.classList.toggle("is-done",inp.checked);saveDone();renderProgress()});
+  renderTopics();renderProgress();
+})();
+
+/* examples */
+(function(){
+  var h="";
+  EX.forEach(function(g){
+    h+='<div class="ex-head">'+esc(g.g)+'</div><div class="ex-grid">';
+    g.items.forEach(function(x){h+='<div class="ex"><h3>'+esc(x[0])+'</h3><p>'+esc(x[1])+'</p><div class="fit">темы: '+x[2].slice().sort(function(a,b){return a-b}).join(", ")+'</div></div>'});
+    h+='</div>';
+  });
+  document.getElementById("exBox").innerHTML=h;
+})();
+
+/* trainer */
+(function(){
+  var pool=T.filter(function(t){return !t.dup}), cur={t:pool[0],side:"pro"};
+  var sideEl=document.getElementById("dSide"), numEl=document.getElementById("dNum"), titleEl=document.getElementById("dTitle"), hint=document.getElementById("hintBox"), hintBtn=document.getElementById("hintBtn");
+  function show(){
+    sideEl.textContent=cur.side==="pro"?"ЗА":"ПРОТИВ";sideEl.className="draw-side "+cur.side;
+    numEl.textContent="тема "+cur.t.n;titleEl.textContent=cur.t.t;hint.hidden=true;hintBtn.textContent="Показать подсказку";
+    var a=cur.side==="pro"?cur.t.p:cur.t.c, q=cur.side==="pro"?cur.t.qp:cur.t.qc;
+    hint.innerHTML='<div class="key" style="margin-bottom:8px"><b>Где идёт спор</b>'+esc(cur.t.k)+'</div><div class="col '+cur.side+'">'+argList(a)+'<div class="q"><b>Спроси соперников</b>'+esc(q)+'</div></div>';
+  }
+  document.getElementById("drawBtn").addEventListener("click",function(){
+    var nt;do{nt=pool[Math.floor(Math.random()*pool.length)]}while(pool.length>1&&nt===cur.t);
+    cur={t:nt,side:Math.random()<.5?"pro":"con"};show();
+  });
+  hintBtn.addEventListener("click",function(){hint.hidden=!hint.hidden;hintBtn.textContent=hint.hidden?"Показать подсказку":"Скрыть подсказку"});
+  show();
+
+  var clock=document.getElementById("clock"), end=0, iv=null;
+  function fmt(s){s=Math.max(0,Math.ceil(s));return Math.floor(s/60)+":"+String(s%60).padStart(2,"0")}
+  function tick(){var left=(end-Date.now())/1000;clock.textContent=fmt(left);
+    clock.classList.toggle("warn",left<=15&&left>0);
+    if(left<=0){clearInterval(iv);iv=null;clock.classList.remove("warn");clock.classList.add("over");clock.textContent="0:00"}}
+  document.querySelectorAll("[data-t]").forEach(function(b){b.addEventListener("click",function(){
+    var s=+b.getAttribute("data-t");end=Date.now()+s*1000;clock.classList.remove("over","warn");clearInterval(iv);iv=setInterval(tick,250);tick()})});
+  document.getElementById("stopBtn").addEventListener("click",function(){clearInterval(iv);iv=null;clock.classList.remove("over","warn")});
+})();
+
+/* checklist memory */
+(function(){
+  var st={};try{st=JSON.parse(localStorage.getItem("debCheck")||"{}")||{}}catch(e){}
+  document.querySelectorAll("#checklist input").forEach(function(c){c.checked=!!st[c.id];c.addEventListener("change",function(){st[c.id]=c.checked;try{localStorage.setItem("debCheck",JSON.stringify(st))}catch(e){}})});
+})();
+</script>
+
+</body>
+</html>
